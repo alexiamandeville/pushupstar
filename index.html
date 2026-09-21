@@ -1,0 +1,1387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Pushup Star - Muscle Beach</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Anton&family=Monoton&family=Oswald:wght@500;700&display=swap');
+  :root {
+    --bg:#141210; --panel:#221e1a; --panel2:#2b2521; --ink:#f4ede1; --muted:#b6a89a;
+    --red:#e2211c; --red-dark:#8f0f0c; --yellow:#ffcf00; --chrome:#d9d4c8; --steel:#4a423a; --black:#0b0a09;
+    --fur:#ffd85c; --tank:#e2211c;
+    --mapSky1:#5ec4e8; --mapSky2:#8ed9ee; --mapGround1:#f4dd9c; --mapGround2:#eccb7c;
+    --mapSun1:#fff3b0; --mapSun2:#ffcf00; --mapWave1:#2f9fd0; --mapWave2:#3fb2e0;
+    --neonPink:#ff2fb0; --neonCyan:#4ff5ff; --neonPurple:#a24fe0; --neonOrange:#ff8a3d;
+  }
+  .mFur{fill:var(--fur)}
+  .mTank{fill:var(--tank)}
+  *{box-sizing:border-box}
+  body{margin:0;
+    background:
+      repeating-linear-gradient(90deg,rgba(255,47,176,.05) 0 2px,transparent 2px 44px),
+      repeating-linear-gradient(0deg,rgba(79,245,255,.05) 0 2px,transparent 2px 44px),
+      linear-gradient(180deg,#1a0f3a 0%,#3a1258 32%,#7a1e5e 55%,#c8442f 78%,#ffb14a 100%);
+    background-attachment:fixed;
+    color:var(--ink);font-family:Oswald,"Arial Narrow",Arial,sans-serif}
+  .app{max-width:430px;min-height:100vh;margin:auto;padding:22px 18px 30px}
+  .screen{display:none;min-height:calc(100vh - 52px);flex-direction:column}
+  .screen.active{display:flex}
+  .logo{font-family:'Monoton',cursive;font-weight:400;font-size:38px;letter-spacing:2px;text-align:center;margin-top:42px;
+    color:#fff6ff;text-transform:uppercase;line-height:1.3;
+    text-shadow:
+      0 0 6px #fff, 0 0 14px var(--neonPink), 0 0 26px var(--neonPink), 0 0 46px var(--neonPink),
+      0 3px 0 rgba(0,0,0,.4);
+    animation:neonFlicker 3.2s infinite}
+  .logo span{color:#eafcff;
+    text-shadow:0 0 6px #fff, 0 0 14px var(--neonCyan), 0 0 26px var(--neonCyan), 0 0 46px var(--neonCyan),0 3px 0 rgba(0,0,0,.4)}
+  .tag{text-align:center;font-size:15px;margin:10px 0 30px;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;font-weight:700}
+  .star{font-size:74px;text-align:center;margin:8px 0 18px;filter:drop-shadow(0 6px 0 var(--black))}
+  .card{background:var(--panel);border:3px solid var(--black);border-radius:6px;padding:22px;
+    box-shadow:7px 7px 0 var(--red);position:relative}
+  h2{margin:0 0 16px;font-size:20px;font-family:Anton,Impact,sans-serif;text-transform:uppercase;letter-spacing:.5px;color:var(--yellow)}
+  .choices{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  button{border:0;border-radius:4px;padding:15px 12px;font:inherit;font-weight:700;cursor:pointer;transition:.1s transform;text-transform:uppercase;letter-spacing:.5px}
+  button:active{transform:translate(3px,3px)}
+  .choice{background:var(--panel2);border:2px solid var(--steel);color:var(--chrome);font-size:20px;font-family:Anton,Impact,sans-serif}
+  .choice.selected{background:var(--red);color:white;border-color:var(--black);box-shadow:3px 3px 0 var(--black)}
+  .primary{background:var(--red);color:white;font-size:19px;width:100%;margin-top:18px;
+    border:3px solid var(--black);box-shadow:5px 5px 0 var(--black);font-family:Anton,Impact,sans-serif}
+  .primary:disabled{background:var(--steel);color:#8a8178;box-shadow:5px 5px 0 var(--black);cursor:default}
+  .secondary{background:var(--yellow);color:var(--black);width:100%;margin-top:12px;border:3px solid var(--black);box-shadow:4px 4px 0 var(--black);font-family:Anton,Impact,sans-serif}
+  .tiny{text-align:center;color:var(--muted);font-size:12px;margin-top:15px;line-height:1.5;text-transform:none;letter-spacing:0;font-weight:400}
+  .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;font-weight:900;
+    font-family:Anton,Impact,sans-serif;color:var(--yellow);text-transform:uppercase;font-size:15px;letter-spacing:.5px}
+  .counter{font-size:56px;font-weight:900;text-align:center;line-height:1;font-family:Anton,Impact,sans-serif;color:var(--red);
+    text-shadow:3px 3px 0 var(--black)}
+  .counter small{font-size:22px;color:var(--muted);font-family:Oswald,sans-serif}
+  .progress{height:16px;background:var(--black);border-radius:3px;overflow:hidden;margin:16px 0 18px;border:2px solid var(--black)}
+  .bar{height:100%;width:0%;transition:.25s;
+    background:repeating-linear-gradient(-45deg,var(--yellow) 0 10px,var(--red) 10px 20px)}
+  .camera{position:relative;aspect-ratio:4/5;border-radius:6px;overflow:hidden;background:var(--black);
+    display:flex;align-items:center;justify-content:center;color:white;text-align:center;border:3px solid var(--red)}
+  video{width:100%;height:100%;object-fit:contain;display:none;background:#000}
+  .camera.on video{display:block}
+  .camera.on .cameraPrompt{display:none}
+  .cameraPrompt{padding:25px}
+  .cameraPrompt .big{font-size:48px;margin-bottom:12px}
+  .overlay{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;display:none}
+  .camera.on .overlay{display:block}
+  .flipBtn{position:absolute;top:10px;right:10px;z-index:5;background:var(--red);color:white;border:2px solid var(--black);border-radius:50%;width:40px;height:40px;font-size:18px;padding:0;display:none}
+  .camera.on .flipBtn{display:block}
+  .modelBadge{position:absolute;top:10px;left:10px;z-index:5;background:var(--yellow);color:var(--black);font-size:11px;font-weight:800;
+    padding:5px 10px;border-radius:3px;display:none;text-transform:uppercase;letter-spacing:.5px;border:2px solid var(--black)}
+  .camera.on .modelBadge{display:block}
+  .feedback{background:var(--panel);border-radius:4px;padding:14px;text-align:center;font-weight:800;margin-top:13px;border:2px solid var(--black);color:var(--ink)}
+  .feedback.good{border-color:var(--red);background:linear-gradient(var(--panel),var(--panel)) padding-box, var(--red);color:var(--yellow);border-width:3px}
+  .feedback.warn{border-color:var(--yellow);color:var(--yellow);border-width:3px;
+    background:repeating-linear-gradient(-45deg,var(--panel) 0 12px,#332c1a 12px 24px)}
+  .repButton{margin-top:13px}
+  .manualRow{display:flex;gap:8px;margin-top:13px}
+  .manualRow button{flex:1;font-size:13px;padding:11px}
+  .victory{text-align:center;margin-top:42px}
+  .victory .bigstar{font-size:105px;filter:drop-shadow(0 8px 0 var(--black))}
+  .victory h1{font-size:44px;margin:8px 0;font-family:Anton,Impact,sans-serif;color:var(--red);text-shadow:3px 3px 0 var(--black);letter-spacing:1px}
+  .score{font-size:76px;font-weight:900;color:var(--yellow);font-family:Anton,Impact,sans-serif;text-shadow:3px 3px 0 var(--black)}
+  .reward{background:var(--panel);border:3px solid var(--yellow);border-radius:6px;padding:18px;text-align:center;font-size:19px;font-weight:900;margin:20px 0;
+    color:var(--yellow);font-family:Anton,Impact,sans-serif;box-shadow:5px 5px 0 var(--black)}
+  .back{background:none;color:var(--muted);padding:6px 0;font-size:13px;text-align:left;text-transform:uppercase;letter-spacing:.5px;font-weight:700}
+  .pulse{animation:pulse .8s infinite alternate}
+  @keyframes pulse{to{transform:scale(1.04)}}
+  .mascot{display:block;margin:2px auto}
+  .mascotCaption{text-align:center;font-size:13px;font-weight:800;color:var(--yellow);margin-top:-4px;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px}
+  @keyframes flexPulse{0%{transform:scale(1) rotate(0deg)}50%{transform:scale(1.05) rotate(-2deg)}100%{transform:scale(1) rotate(0deg)}}
+  .mascot.flex{animation:flexPulse 1.2s ease-in-out infinite}
+  @keyframes cheerBounce{0%{transform:translateY(0) rotate(0deg)}30%{transform:translateY(-14px) rotate(6deg)}60%{transform:translateY(0) rotate(-4deg)}100%{transform:translateY(0) rotate(0deg)}}
+  .mascot.cheer{animation:cheerBounce .55s ease}
+  .coachCorner{display:flex;align-items:center;gap:10px;background:var(--panel);border:2px solid var(--black);border-radius:4px;padding:8px 12px;margin-top:10px;
+    box-shadow:4px 4px 0 var(--black)}
+  .coachCorner .mascot{margin:0;flex-shrink:0}
+  .coachCorner span{font-size:12px;font-weight:700;color:var(--chrome);text-transform:uppercase;letter-spacing:.3px}
+  .mapWrap{position:relative;height:460px;border-radius:6px;overflow:hidden;border:3px solid var(--black)}
+  .mapBg{position:absolute;inset:0;z-index:0;
+    background-image:
+      repeating-linear-gradient(30deg,rgba(255,255,255,.10) 0 2px,transparent 2px 40px),
+      repeating-linear-gradient(-30deg,rgba(0,0,0,.12) 0 2px,transparent 2px 40px),
+      linear-gradient(var(--mapGround1),var(--mapGround2))}
+  .mapWrap:after{content:"";position:absolute;left:0;right:0;top:0;height:14px;background:repeating-linear-gradient(-45deg,var(--yellow) 0 14px,var(--black) 14px 28px);z-index:4}
+  .mapScroll{position:absolute;inset:0;overflow:hidden;z-index:2;cursor:grab;touch-action:none;user-select:none}
+  .mapScroll.dragging{cursor:grabbing}
+  .mapInner{position:absolute;top:0;left:0;will-change:transform;
+    background-image:
+      repeating-linear-gradient(30deg,rgba(255,255,255,.10) 0 2px,transparent 2px 40px),
+      repeating-linear-gradient(-30deg,rgba(0,0,0,.12) 0 2px,transparent 2px 40px),
+      linear-gradient(var(--mapGround1),var(--mapGround2))}
+  .mapPathSvg{position:absolute;top:0;left:0;z-index:0;overflow:visible}
+  .map-sun{position:absolute;top:8%;right:10%;width:70px;height:70px;border-radius:50%;
+    background:radial-gradient(circle,var(--mapSun1),var(--mapSun2) 55%,#ff9d2f 100%);box-shadow:0 0 40px 12px rgba(255,207,0,.35);z-index:1}
+  .map-sign{position:absolute;top:6%;left:6%;background:#1a1030;color:#fff6ff;border:3px solid var(--black);border-radius:8px;
+    padding:7px 11px;font-family:'Monoton',cursive;font-weight:400;font-size:13px;line-height:1.3;text-align:center;letter-spacing:1px;
+    text-shadow:0 0 4px #fff,0 0 10px var(--neonPink),0 0 18px var(--neonPink);
+    box-shadow:4px 4px 0 var(--black);z-index:4;transform:rotate(-3deg);animation:neonFlicker 3.6s infinite}
+  .map-bird{position:absolute;z-index:2;font-size:20px;opacity:.75}.b1{left:20%;top:14%}.b2{left:55%;top:9%}
+  .map-palm{position:absolute;z-index:2;font-size:44px;filter:drop-shadow(2px 3px 0 rgba(0,0,0,.25))}
+  .p1{left:2%;bottom:8%}.p2{right:0%;bottom:4%;transform:scaleX(-1)}
+  .map-waves{position:absolute;left:0;right:0;bottom:0;height:34px;z-index:1;
+    background:repeating-linear-gradient(90deg,var(--mapWave1) 0 30px,var(--mapWave2) 30px 60px);
+    clip-path:polygon(0% 40%,5% 20%,10% 40%,15% 15%,20% 40%,25% 22%,30% 40%,35% 18%,40% 40%,45% 24%,50% 40%,55% 16%,60% 40%,65% 20%,70% 40%,75% 24%,80% 40%,85% 18%,90% 40%,95% 22%,100% 40%,100% 100%,0% 100%)}
+  .centerBtn{position:absolute;right:10px;bottom:10px;z-index:5;width:44px;height:44px;border-radius:50%;
+    background:var(--yellow);border:3px solid var(--black);box-shadow:3px 3px 0 var(--black);font-size:19px;padding:0}
+  .levelSlot{position:absolute;width:0;height:0;z-index:3}
+  .levelShadow{position:absolute;left:0;top:-14px;width:74px;height:28px;margin-left:-37px;border-radius:50%;
+    background:radial-gradient(ellipse,rgba(0,0,0,.5),rgba(0,0,0,0) 72%);z-index:1}
+  .doneBadge{position:absolute;top:-8px;right:-8px;background:#2fa34f;color:white;border:3px solid var(--black);
+    border-radius:20px;font-size:10px;font-family:Anton,Impact,sans-serif;padding:2px 5px;line-height:1.1;min-width:22px}
+  .level{position:absolute;left:0;top:-78px;margin-left:-38px;z-index:2;width:76px;height:76px;border-radius:50%;border:5px solid var(--black);
+    background:radial-gradient(circle at 35% 30%,#efeae0,var(--chrome) 60%,#9a948a);box-shadow:0 5px 0 var(--black);font-size:24px;color:var(--black);font-family:Anton,Impact,sans-serif}
+  .level small{display:block;font-size:12px}.level b{display:block;font-size:9px;color:#3a352f;white-space:nowrap;text-transform:uppercase}
+  .level.locked{background:radial-gradient(circle at 35% 30%,#4f4941,var(--steel) 60%,#332e28);box-shadow:0 5px 0 var(--black);color:var(--muted)}
+  .level.current{background:radial-gradient(circle at 35% 30%,#ff5c56,var(--red) 60%,#7a0e0c);box-shadow:0 5px 0 var(--black);color:white}
+  .level.cooldown{background:radial-gradient(circle at 35% 30%,#5c6ab8,#2e3766 60%,#1a1f3d);box-shadow:0 5px 0 var(--black);color:#cfd6ff;
+    animation:cooldownPulse 1.8s ease-in-out infinite}
+  .level.premium{background:radial-gradient(circle at 35% 30%,#a98bff,#5c3ecf 60%,#2c1a6e 100%);box-shadow:0 5px 0 var(--black);color:#f0e9ff}
+  @keyframes cooldownPulse{0%,100%{filter:brightness(1)}50%{filter:brightness(1.25)}}
+  .worldTabs{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 10px}
+  .worldTab{flex-shrink:0;background:var(--panel2);color:var(--chrome);border:3px solid var(--black);border-radius:6px;
+    padding:8px 12px;font-family:Anton,Impact,sans-serif;font-size:10px;text-align:center;line-height:1.4;
+    box-shadow:3px 3px 0 var(--black);text-transform:uppercase}
+  .worldTab.active{background:var(--red);color:white}
+  .worldTab.locked{background:var(--steel);color:#8a8178}
+  .streakBar{display:flex;align-items:center;gap:8px;background:var(--panel);border:3px solid var(--black);border-radius:4px;
+    padding:10px 14px;box-shadow:4px 4px 0 var(--yellow);font-family:Anton,Impact,sans-serif;text-transform:uppercase;
+    color:var(--ink);font-size:15px;letter-spacing:.5px}
+  .streakFlame{font-size:22px;filter:drop-shadow(0 2px 0 var(--black))}
+  .streakNext{margin-left:auto;font-family:Oswald,sans-serif;font-size:11px;color:var(--muted);text-transform:none;letter-spacing:0;font-weight:400}
+  .bonusLine{font-family:Oswald,sans-serif;font-size:15px;color:var(--chrome);margin-top:6px;font-weight:600}
+  .milestoneBanner{background:var(--red);border:3px solid var(--black);border-radius:4px;padding:12px 16px;margin:16px 0;
+    box-shadow:5px 5px 0 var(--black);font-family:Anton,Impact,sans-serif;color:var(--yellow);text-transform:uppercase;
+    letter-spacing:.5px;font-size:16px;display:none}
+  #confettiCanvas{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:60}
+  .jackpotText{font-family:Anton,Impact,sans-serif;font-size:26px;letter-spacing:2px;text-align:center;text-transform:uppercase;
+    color:#fff6d0;margin-bottom:4px;
+    text-shadow:0 0 6px var(--yellow),0 0 14px var(--yellow),0 0 22px var(--red),2px 2px 0 var(--black);
+    animation:neonFlicker 1.1s infinite}
+  @keyframes neonFlicker{
+    0%,19%,21%,54%,56%,100%{opacity:1}
+    20%,55%{opacity:.55}
+  }
+  .rewardWrap{position:relative;margin:20px 0}
+  .rewardWrap .reward{margin:0;position:relative;z-index:2}
+  .marqueeStrip{height:9px;background-image:repeating-radial-gradient(circle,var(--yellow) 0 3.5px,transparent 4.5px 22px);
+    background-size:22px 22px;animation:marqueeMove .6s linear infinite}
+  @keyframes marqueeMove{to{background-position:22px 0}}
+  @keyframes screenFlash{0%{background:rgba(255,207,0,.35)}100%{background:rgba(255,207,0,0)}}
+  .flashOverlay{position:fixed;inset:0;pointer-events:none;z-index:55}
+  .sideTabs{position:fixed;top:130px;right:0;z-index:40;display:flex;flex-direction:column;gap:10px}
+  .sideTab{background:var(--yellow);color:var(--black);border:3px solid var(--black);border-right:none;
+    border-radius:10px 0 0 10px;padding:10px 10px 10px 14px;font-family:Anton,Impact,sans-serif;font-size:10px;
+    letter-spacing:.5px;text-transform:uppercase;box-shadow:-4px 4px 0 var(--black);display:flex;flex-direction:column;
+    align-items:center;gap:2px;cursor:pointer;width:52px;transition:transform .1s}
+  .sideTab:active{transform:translateX(2px)}
+  .sideTab .ico{font-size:22px}
+  .sideTab.shopTab{background:var(--red);color:white}
+  .sideTabs.hide{display:none}
+  .lbRow{display:flex;align-items:center;gap:10px;padding:10px 8px;border-bottom:2px solid var(--steel);font-family:Oswald,sans-serif}
+  .lbRow:last-child{border-bottom:none}
+  .lbRank{width:32px;font-family:Anton,Impact,sans-serif;font-size:15px;color:var(--yellow);text-align:center}
+  .lbName{flex:1;font-weight:700;color:var(--ink);text-transform:uppercase;font-size:14px}
+  .lbStars{font-weight:800;color:var(--yellow);font-family:Anton,Impact,sans-serif;font-size:14px}
+  .lbYou{background:rgba(226,33,28,.28);border-radius:4px;box-shadow:inset 0 0 0 2px var(--red)}
+  .shopItem{display:flex;align-items:center;gap:12px;padding:12px 8px;border-bottom:2px solid var(--steel)}
+  .shopItem:last-child{border-bottom:none}
+  .shopSwatch{width:52px;height:52px;border-radius:50%;border:4px solid var(--black);flex-shrink:0;position:relative}
+  .shopInfo{flex:1}
+  .shopName{font-family:Anton,Impact,sans-serif;font-size:15px;color:var(--ink);text-transform:uppercase;letter-spacing:.3px}
+  .shopDesc{font-size:12px;color:var(--muted);margin-top:2px}
+  .shopBtn{font-family:Anton,Impact,sans-serif;font-size:12px;padding:9px 12px;white-space:nowrap;border:3px solid var(--black)}
+  .shopBtn.buy{background:var(--yellow);color:var(--black);box-shadow:3px 3px 0 var(--black)}
+  .shopBtn.equipped{background:var(--red);color:white;box-shadow:3px 3px 0 var(--black)}
+  .shopBtn.equip{background:var(--panel2);color:var(--chrome);box-shadow:3px 3px 0 var(--black)}
+  .shopBtn:disabled{background:var(--steel);color:#8a8178;box-shadow:3px 3px 0 var(--black);cursor:default}
+  .levelHistory{margin-top:12px;padding-top:10px;border-top:2px solid var(--steel);text-align:left}
+  .histHead{font-family:Anton,Impact,sans-serif;font-size:13px;color:var(--yellow);text-transform:uppercase;letter-spacing:.4px}
+  .histCount{font-size:11px;color:var(--muted);margin-top:3px;font-weight:600}
+  .histList{margin-top:8px;max-height:132px;overflow-y:auto}
+  .histRow{display:flex;justify-content:space-between;gap:8px;font-size:11px;color:var(--chrome);
+    padding:5px 0;border-bottom:1px solid var(--steel)}
+  .histRow:last-child{border-bottom:none}
+  .histRow span:first-child{color:var(--muted);white-space:nowrap}
+  .infoBtn{background:none;border:none;font-size:16px;padding:0 2px;cursor:pointer;width:auto}
+  .infoModal{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:90;display:flex;align-items:center;justify-content:center;padding:20px}
+  .infoCard{position:relative;background:var(--panel);border:3px solid var(--black);border-radius:6px;
+    box-shadow:7px 7px 0 var(--red);padding:22px;max-width:380px;max-height:80vh;overflow-y:auto}
+  .infoClose{position:absolute;top:10px;right:10px;background:var(--red);color:white;border:2px solid var(--black);
+    border-radius:50%;width:30px;height:30px;font-size:14px;padding:0}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+<div class="sideTabs" id="sideTabs">
+  <button class="sideTab" onclick="show('leaderboard');renderLeaderboard()">
+    <span class="ico">🏆</span><span>Ranks</span>
+  </button>
+  <button class="sideTab shopTab" onclick="show('shop');renderShop()">
+    <span class="ico">🛒</span><span>Shop</span>
+  </button>
+</div>
+
+<section id="map" class="screen active">
+  <div class="topbar"><span>PUSHUP STAR ⭐</span><span>⭐ <span id="mapStars">0</span></span></div>
+  <div class="logo" style="font-size:32px;margin-top:18px">MUSCLE BEACH</div>
+  <div class="tag" style="margin-bottom:10px">Complete pushup challenges to conquer the beach!</div>
+  <div class="streakBar" id="streakBar">
+    <span class="streakFlame">🔥</span>
+    <span><span id="streakCount">0</span>-day streak</span>
+    <button class="infoBtn" onclick="showStarsInfo()" title="How stars work">ℹ️</button>
+    <span class="streakNext" id="streakNext"></span>
+  </div>
+  <div class="worldTabs" id="worldTabs"></div>
+  <div class="card" style="padding:16px;margin-top:6px">
+    <div class="mapWrap">
+      <div class="mapBg"></div>
+      <div class="map-sun"></div>
+      <div class="map-sign" id="mapSign">MUSCLE<br>BEACH</div>
+      <div class="map-bird b1" id="mapBird1">🕊️</div><div class="map-bird b2" id="mapBird2">🕊️</div>
+      <div class="map-palm p1" id="mapPalm1">🌴</div><div class="map-palm p2" id="mapPalm2">🌴</div>
+      <div class="map-waves"></div>
+      <div class="mapScroll" id="mapScrollArea">
+        <div class="mapInner" id="mapInner"></div>
+      </div>
+      <button class="centerBtn" onclick="centerOnFrontier()" title="Find my level">🎯</button>
+    </div>
+  </div>
+  <div class="card" style="margin-top:15px;text-align:center">
+    <div style="font-weight:900;font-size:20px" id="levelTitle">Level 1: Rusty Squat Rack</div>
+    <div style="color:var(--muted);margin-top:5px" id="levelDesc">Chalk up, warm-up set.</div>
+    <div class="levelHistory" id="levelHistory" style="display:none"></div>
+    <div class="tiny" id="dailyStatus" style="display:none;color:var(--yellow);font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-top:10px"></div>
+    <button class="primary" id="startLevelBtn" onclick="startSelected()">START LEVEL ⭐</button>
+  </div>
+  <div class="tiny" style="margin-top:14px;text-align:center">
+    <a href="#" onclick="resetProgress();return false;" style="color:var(--muted);text-decoration:underline">Reset progress</a>
+  </div>
+</section>
+
+<section id="start" class="screen">
+  <div class="logo">PUSHUP <span>STAR</span> ⭐</div>
+  <div class="tag">Drop and give me reps. No pain, no gains.</div>
+  <svg class="mascot flex" width="150" height="150" viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="60" cy="55" r="20" fill="#f0c84d"/><circle cx="160" cy="55" r="20" fill="#f0c84d"/>
+    <circle cx="60" cy="55" r="9" fill="#fff2d6"/><circle cx="160" cy="55" r="9" fill="#fff2d6"/>
+    <path d="M62,160 Q28,152 26,114 Q25,92 46,88 Q62,86 63,105 Q65,122 71,142 Z" class="mFur"/>
+    <circle cx="38" cy="106" r="24" class="mFur"/><circle cx="31" cy="87" r="18" class="mFur"/>
+    <rect x="21" y="79" width="26" height="11" rx="5.5" class="mTank"/>
+    <path d="M158,160 Q192,152 194,114 Q195,92 174,88 Q158,86 157,105 Q155,122 149,142 Z" class="mFur"/>
+    <circle cx="182" cy="106" r="24" class="mFur"/><circle cx="189" cy="87" r="18" class="mFur"/>
+    <rect x="173" y="79" width="26" height="11" rx="5.5" class="mTank"/>
+    <ellipse cx="110" cy="178" rx="58" ry="44" class="mFur"/>
+    <path d="M62,152 Q110,133 158,152 L158,200 Q110,214 62,200 Z" class="mTank"/>
+    <polygon points="110,159 114,169 125,169 116,176 119,187 110,180 101,187 104,176 95,169 106,169" fill="#ffcf00"/>
+    <circle cx="110" cy="75" r="52" class="mFur"/>
+    <circle cx="80" cy="92" r="8" fill="#ff9fc4" opacity=".55"/><circle cx="140" cy="92" r="8" fill="#ff9fc4" opacity=".55"/>
+    <ellipse cx="110" cy="87" rx="9" ry="7" fill="#342d3e"/>
+    <rect x="74" y="57" width="30" height="19" rx="9" fill="#1a1030"/><rect x="116" y="57" width="30" height="19" rx="9" fill="#1a1030"/>
+    <rect x="104" y="63" width="12" height="5" rx="2.5" fill="#1a1030"/>
+    <path d="M78,62 Q84,60 90,63" stroke="#ff5fd1" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".85"/>
+    <path d="M120,62 Q126,60 132,63" stroke="#5fe8ff" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".85"/>
+    <path d="M64,100 Q90,80 110,95 Q130,80 156,100 Q142,120 124,106 Q119,122 110,104 Q101,122 96,106 Q78,120 64,100 Z" fill="#6b4a2f"/>
+  </svg>
+  <div class="mascotCaption">Coach Cosmo says: PUMP IT UP! 💪</div>
+  <div class="card">
+    <h2>Today's goal</h2>
+    <div class="choices">
+      <button class="choice" data-goal="5">5</button>
+      <button class="choice selected" data-goal="10">10</button>
+      <button class="choice" data-goal="20">20</button>
+    </div>
+    <button class="primary" onclick="startQuickWorkout()">QUICK PUSHUP ⭐</button><button class="secondary" onclick="show('map');updateMap()">EXPLORE MUSCLE BEACH</button>
+    <div class="tiny">Your camera will be used to count reps and give simple form feedback with on-device AI. Nothing is uploaded anywhere.</div>
+  </div>
+</section>
+
+<section id="workout" class="screen">
+  <button class="back" onclick="stopEverything();show('map')">← Back to map</button>
+  <div class="topbar"><span>PUSHUP STAR</span><span>⭐ <span id="stars">0</span></span></div>
+  <div class="counter"><span id="count">0</span> <small>/ <span id="goal">10</span></small></div>
+  <div class="progress"><div class="bar" id="bar"></div></div>
+
+  <div class="camera" id="camera">
+    <div class="modelBadge" id="modelBadge">Loading AI…</div>
+    <button class="flipBtn" onclick="flipCamera()" title="Flip camera">🔄</button>
+    <video id="video" autoplay playsinline muted></video>
+    <canvas class="overlay" id="overlay"></canvas>
+    <div class="cameraPrompt">
+      <div class="big">📱</div>
+      <strong>Set up your camera</strong>
+      <p>Prop your phone so your whole body is visible from the side, then enable your camera.</p>
+      <button class="secondary" onclick="enableCamera()">ENABLE CAMERA</button>
+    </div>
+  </div>
+
+  <div class="coachCorner">
+    <svg class="mascot" id="coachMascot" width="52" height="52" viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="60" cy="55" r="20" fill="#f0c84d"/><circle cx="160" cy="55" r="20" fill="#f0c84d"/>
+      <circle cx="60" cy="55" r="9" fill="#fff2d6"/><circle cx="160" cy="55" r="9" fill="#fff2d6"/>
+      <path d="M62,160 Q28,152 26,114 Q25,92 46,88 Q62,86 63,105 Q65,122 71,142 Z" class="mFur"/>
+      <circle cx="38" cy="106" r="24" class="mFur"/><circle cx="31" cy="87" r="18" class="mFur"/>
+      <rect x="21" y="79" width="26" height="11" rx="5.5" class="mTank"/>
+      <path d="M158,160 Q192,152 194,114 Q195,92 174,88 Q158,86 157,105 Q155,122 149,142 Z" class="mFur"/>
+      <circle cx="182" cy="106" r="24" class="mFur"/><circle cx="189" cy="87" r="18" class="mFur"/>
+      <rect x="173" y="79" width="26" height="11" rx="5.5" class="mTank"/>
+      <ellipse cx="110" cy="178" rx="58" ry="44" class="mFur"/>
+      <path d="M62,152 Q110,133 158,152 L158,200 Q110,214 62,200 Z" class="mTank"/>
+      <polygon points="110,159 114,169 125,169 116,176 119,187 110,180 101,187 104,176 95,169 106,169" fill="#ffcf00"/>
+      <circle cx="110" cy="75" r="52" class="mFur"/>
+      <circle cx="80" cy="92" r="8" fill="#ff9fc4" opacity=".55"/><circle cx="140" cy="92" r="8" fill="#ff9fc4" opacity=".55"/>
+      <ellipse cx="110" cy="87" rx="9" ry="7" fill="#342d3e"/>
+      <rect x="74" y="57" width="30" height="19" rx="9" fill="#1a1030"/><rect x="116" y="57" width="30" height="19" rx="9" fill="#1a1030"/>
+      <rect x="104" y="63" width="12" height="5" rx="2.5" fill="#1a1030"/>
+      <path d="M78,62 Q84,60 90,63" stroke="#ff5fd1" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".85"/>
+      <path d="M120,62 Q126,60 132,63" stroke="#5fe8ff" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".85"/>
+      <path d="M64,100 Q90,80 110,95 Q130,80 156,100 Q142,120 124,106 Q119,122 110,104 Q101,122 96,106 Q78,120 64,100 Z" fill="#6b4a2f"/>
+    </svg>
+    <span id="coachLine">Coach Cosmo is watching your form!</span>
+  </div>
+  <div class="feedback" id="feedback">Get into pushup position. The AI will start counting automatically once it can see your shoulders, elbows and hips.</div>
+  <div class="manualRow">
+    <button class="secondary" onclick="rep()">＋1 manual rep</button>
+    <button class="secondary" onclick="undoRep()">－1 undo</button>
+  </div>
+  <div class="tiny" id="engineNote">Rep counting uses on-device pose estimation (TensorFlow.js MoveNet) running live on your camera feed. Use the manual buttons any time the AI miscounts.</div>
+</section>
+
+<section id="done" class="screen">
+  <canvas id="confettiCanvas"></canvas>
+  <div class="victory">
+    <div class="jackpotText" id="jackpotText">🎰 JACKPOT 🎰</div>
+    <svg class="mascot cheer" width="190" height="190" viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg" style="margin:0 auto">
+      <circle cx="55" cy="50" r="20" fill="#f0c84d"/><circle cx="165" cy="50" r="20" fill="#f0c84d"/>
+      <circle cx="55" cy="50" r="9" fill="#fff2d6"/><circle cx="165" cy="50" r="9" fill="#fff2d6"/>
+      <path d="M64,148 Q22,120 24,78 Q25,58 46,58 Q62,58 64,78 Q66,105 74,132 Z" class="mFur"/>
+      <circle cx="33" cy="70" r="24" class="mFur"/><circle cx="26" cy="51" r="18" class="mFur"/>
+      <rect x="16" y="60" width="26" height="11" rx="5.5" class="mTank" transform="rotate(-25 16 60)"/>
+      <path d="M156,148 Q198,120 196,78 Q195,58 174,58 Q158,58 156,78 Q154,105 146,132 Z" class="mFur"/>
+      <circle cx="187" cy="70" r="24" class="mFur"/><circle cx="194" cy="51" r="18" class="mFur"/>
+      <rect x="178" y="60" width="26" height="11" rx="5.5" class="mTank" transform="rotate(25 204 60)"/>
+      <ellipse cx="110" cy="170" rx="58" ry="44" class="mFur"/>
+      <path d="M62,144 Q110,125 158,144 L158,192 Q110,206 62,192 Z" class="mTank"/>
+      <polygon points="110,151 114,161 125,161 116,168 119,179 110,172 101,179 104,168 95,161 106,161" fill="#ffcf00"/>
+      <circle cx="110" cy="67" r="52" class="mFur"/>
+      <circle cx="80" cy="84" r="8" fill="#ff9fc4" opacity=".55"/><circle cx="140" cy="84" r="8" fill="#ff9fc4" opacity=".55"/>
+      <ellipse cx="110" cy="79" rx="9" ry="7" fill="#342d3e"/>
+      <rect x="74" y="49" width="30" height="19" rx="9" fill="#1a1030"/><rect x="116" y="49" width="30" height="19" rx="9" fill="#1a1030"/>
+      <rect x="104" y="55" width="12" height="5" rx="2.5" fill="#1a1030"/>
+      <path d="M78,54 Q84,52 90,55" stroke="#ff5fd1" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".85"/>
+      <path d="M120,54 Q126,52 132,55" stroke="#5fe8ff" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".85"/>
+      <path d="M64,92 Q90,72 110,87 Q130,72 156,92 Q142,112 124,98 Q119,114 110,96 Q101,114 96,98 Q78,112 64,92 Z" fill="#6b4a2f"/>
+    </svg>
+    <div class="mascotCaption" style="margin-top:6px">Coach Cosmo is SO proud of you!</div>
+    <h1>YOU DID IT!</h1>
+    <div class="score" id="finalScore">10</div>
+    <div style="font-size:22px;font-weight:900">PUSHUPS</div>
+    <div class="milestoneBanner" id="milestoneBanner"></div>
+    <div class="rewardWrap">
+      <div class="marqueeStrip"></div>
+      <div class="reward">⭐ +<span id="earned">0</span> STARS ⭐</div>
+      <div class="marqueeStrip"></div>
+    </div>
+    <div class="bonusLine" id="bonusLine" style="display:none"></div>
+    <button class="primary" onclick="show('map'); updateMap()">BACK TO MAP ⭐</button>
+    <button class="secondary" onclick="shareResult()">SHARE MY SCORE</button>
+  </div>
+</section>
+
+<section id="leaderboard" class="screen">
+  <button class="back" onclick="show('map')">← Back to the beach</button>
+  <div class="logo" style="font-size:28px;margin-top:10px">🏆 TOP LIFTERS</div>
+  <div class="tag" style="margin-bottom:14px">This week at Muscle Beach</div>
+  <div class="card" id="leaderboardList" style="padding:6px 10px"></div>
+</section>
+
+<section id="shop" class="screen">
+  <button class="back" onclick="show('map')">← Back to the beach</button>
+  <div class="logo" style="font-size:28px;margin-top:10px">🛒 SWAG SHOP</div>
+  <div class="tag" style="margin-bottom:6px">Spend your stars on new looks for Coach Cosmo</div>
+  <div class="topbar" style="justify-content:center;margin-bottom:14px;gap:10px">⭐ <span id="shopBalance">0</span> stars available
+    <button class="infoBtn" onclick="showStarsInfo()" title="How stars work">ℹ️</button>
+  </div>
+  <div class="card" id="shopList" style="padding:6px 10px"></div>
+</section>
+
+<section id="buy" class="screen">
+  <button class="back" onclick="show('map')">← Back to the beach</button>
+  <div class="logo" style="font-size:24px;margin-top:8px">🔓 GO PRO</div>
+  <div class="tag" style="margin-bottom:6px">You've conquered Muscle Beach!</div>
+  <div class="card" style="text-align:center">
+    <h2 style="text-align:center">UNLOCK THE FULL GAME</h2>
+    <div class="tiny" style="margin-top:0">5 more overworlds. About 6 months of daily levels. One epic journey to legend status.</div>
+    <div id="worldPreviewList" style="text-align:left;margin:16px 0"></div>
+    <div class="score" style="font-size:40px;margin:10px 0">$4.99</div>
+    <button class="primary" onclick="simulatePurchase()">BUY FULL GAME</button>
+    <button class="secondary" onclick="show('map');updateMap()">MAYBE LATER</button>
+    <div class="tiny">Demo only — this button simulates a purchase locally. No real payment is processed.</div>
+  </div>
+</section>
+
+<div class="infoModal" id="infoModal" style="display:none" onclick="if(event.target.id==='infoModal')closeInfo()">
+  <div class="infoCard">
+    <button class="infoClose" onclick="closeInfo()">✕</button>
+    <div id="infoContent"></div>
+  </div>
+</div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.20.0/dist/tf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/pose-detection@2.1.3/dist/pose-detection.min.js"></script>
+<script>
+let goal=10, count=0, stream=null, selectedLevel=1, isLevelSession=false;
+let detector=null, rafId=null, currentFacing='environment';
+let repState='up', minElbowDuringDown=999, lastRepAt=0;
+const CONF_MIN=0.35;          // minimum keypoint confidence to trust it
+const DOWN_ENTER=100;         // elbow angle below this = "down" phase
+const UP_ENTER=155;           // elbow angle above this = "up" phase (completes a rep)
+const GOOD_DEPTH=100;         // must have dipped at least this low to count as a full rep
+const HIP_STRAIGHT_MIN=155;   // shoulder-hip-ankle angle below this = sagging/piking
+
+function buildLevels(ow){
+  const arr=[];
+  for(let i=0;i<ow.days;i++){
+    const reps = (ow.repsList && ow.repsList[i]!==undefined) ? ow.repsList[i] : Math.min(ow.repsCap, ow.repsStart+i*ow.repsStep);
+    const bank=ow.nameBank, idx=i%bank.length, cycle=Math.floor(i/bank.length);
+    const suffix = cycle>0 ? ' '+(['','II','III','IV','V','VI'][cycle]||('x'+(cycle+1))) : '';
+    arr.push({name:bank[idx]+suffix, desc:'Day '+(i+1)+' at '+ow.name+'.', reps});
+  }
+  return arr;
+}
+
+const OVERWORLDS=[
+  {id:'beach', name:'Muscle Beach', short:'Beach', icon:'🌴', free:true, days:30,
+   repsList:[5,5,6,6,7,8,8,9,9,10,10,10,11,11,12,13,13,14,14,15,15,15,16,16,17,18,18,19,19,20],
+   nameBank:['Rusty Squat Rack','Free Weight Alley','The Sweat Pit','Iron Summit','Hall of Gains','Boardwalk Burn',
+     'Tidepool Push-Ups','Palm Tree Pump','Lifeguard Lane','Sandbar Sprint','Pier Press','Driftwood Dips',
+     'Cabana Crunch','Wave Breaker','Sunset Sets','Low Tide Lift','High Tide Hustle','Coral Reef Reps',
+     'Seashell Circuit','Surfboard Strength','Boardwalk Legends','Beachfront Beast Mode','Golden Hour Grind',
+     'Last Wave Workout','Muscle Beach Finale','Sunburnt Circuit','Tiki Torch Test','Board Shorts Blitz',
+     'Flex on the Sand','Champion of the Coast'],
+   decor:{sky1:'#5ec4e8',sky2:'#8ed9ee',ground1:'#f4dd9c',ground2:'#eccb7c',sun1:'#fff3b0',sun2:'#ffcf00',
+     wave1:'#2f9fd0',wave2:'#3fb2e0',sign:'MUSCLE<br>BEACH',bird:'🕊️',palm:'🌴'}},
+  {id:'jungle', name:'Iron Jungle', short:'Jungle', icon:'🌿', free:false, days:30,
+   repsStart:32, repsStep:1, repsCap:45,
+   nameBank:['Vine Swing Circuit','Canopy Crusher','Monkey Bar Madness','Muddy Trail Grind','Jungle Drum Burn',
+     'Waterfall Warrior',"Tarzan's Trial",'Thicket Throwdown','Root & Rumble','Jungle King Challenge',
+     'Emerald Endurance','Rainforest Reckoning'],
+   decor:{sky1:'#dff2c2',sky2:'#bfe38f',ground1:'#6b8f3f',ground2:'#3f5a24',sun1:'#f6ffb0',sun2:'#c8e05a',
+     wave1:'#4c7a2e',wave2:'#5f9438',sign:'IRON<br>JUNGLE',bird:'🦜',palm:'🐒'}},
+  {id:'mountain', name:'Steel Mountain', short:'Mountain', icon:'⛰️', free:false, days:30,
+   repsStart:36, repsStep:1, repsCap:50,
+   nameBank:['Base Camp Burner','Rocky Ridge Reps','Switchback Sweat','Avalanche Ascent','Granite Grind',
+     'Cliffside Circuit','Thin Air Throwdown','Boulder Battle','Summit Push','Alpine Ascension',
+     'Frostbite Finisher','Peak Performance'],
+   decor:{sky1:'#cfe8f7',sky2:'#eef6fb',ground1:'#b9c6cf',ground2:'#7c8b96',sun1:'#ffffff',sun2:'#bcd8ea',
+     wave1:'#8fa2ac',wave2:'#a9bac2',sign:'STEEL<br>MOUNTAIN',bird:'🦅',palm:'🌲'}},
+  {id:'city', name:'Neon City', short:'City', icon:'🌆', free:false, days:30,
+   repsStart:40, repsStep:1, repsCap:55,
+   nameBank:['Rooftop Rumble','Alleyway Grind','Neon Nightlife','Subway Sprint','Skyline Circuit',
+     'Rush Hour Reps','Downtown Burner','Penthouse Push','Streetlight Showdown','Metro Muscle',
+     'Midnight Madness','City of Legends'],
+   decor:{sky1:'#1b1035',sky2:'#3a1c5e',ground1:'#2b2b3d',ground2:'#14141c',sun1:'#ff9df0',sun2:'#a24fe0',
+     wave1:'#ff2fb0',wave2:'#4f2fe0',sign:'NEON<br>CITY',bird:'🎆',palm:'🏙️'}},
+  {id:'frozen', name:'Frozen Peak', short:'Frozen', icon:'❄️', free:false, days:30,
+   repsStart:44, repsStep:1, repsCap:60,
+   nameBank:['Icebreaker','Frostbite Circuit','Snowdrift Sweat','Glacier Grind','Blizzard Burner',
+     'Polar Push','Tundra Trial','Arctic Ascension','Whiteout Warrior','Permafrost Punisher',
+     'Northern Lights Finisher','Frozen Legend'],
+   decor:{sky1:'#dff1fb',sky2:'#ffffff',ground1:'#eaf6ff',ground2:'#cfe9fb',sun1:'#ffffff',sun2:'#cfeaff',
+     wave1:'#9fd4f0',wave2:'#bfe4f7',sign:'FROZEN<br>PEAK',bird:'🐧',palm:'🧊'}},
+  {id:'space', name:'Space Station', short:'Space', icon:'🚀', free:false, days:35,
+   repsStart:48, repsStep:1, repsCap:70,
+   nameBank:['Zero-G Warmup','Launchpad Lift','Orbit Circuit','Lunar Push','Asteroid Alley',
+     'Meteor Shower Burn','Cosmic Crunch','Galactic Grind','Nebula Nightmare','Blackhole Burner',
+     'Supernova Sweat','Interstellar Push','Mission Control Madness','Space Legend Finale'],
+   decor:{sky1:'#05010f',sky2:'#140a2e',ground1:'#1c1440',ground2:'#0a0620',sun1:'#ffcf9d',sun2:'#8a4fe0',
+     wave1:'#241a4a',wave2:'#150f30',sign:'SPACE<br>STATION',bird:'🛸',palm:'🪐'}}
+];
+let cum=0;
+OVERWORLDS.forEach(ow=>{ ow.levels=buildLevels(ow); ow.startIndex=cum; cum+=ow.days; });
+const ALL_LEVELS=OVERWORLDS.flatMap(ow=>ow.levels);
+const TOTAL_LEVELS=ALL_LEVELS.length;
+let currentWorldIdx=0;
+
+function getWorldIndexForGlobal(idx){
+  for(let i=0;i<OVERWORLDS.length;i++){
+    if(idx<OVERWORLDS[i].startIndex+OVERWORLDS[i].days) return i;
+  }
+  return OVERWORLDS.length-1;
+}
+function hasFullGame(){ return localStorage.getItem('hasFullGame')==='1'; }
+function getMaxAllowed(){ return hasFullGame() ? TOTAL_LEVELS : OVERWORLDS[0].days; }
+
+
+function todayStr(){ return new Date().toISOString().slice(0,10); }
+function yesterdayStr(){ const d=new Date(); d.setDate(d.getDate()-1); return d.toISOString().slice(0,10); }
+function getLevelsCompleted(){ return Number(localStorage.getItem('levelsCompleted')||0); }
+function getStreak(){ return Number(localStorage.getItem('streakCount')||0); }
+const STREAK_MILESTONES=[3,7,14,30,60,100];
+const STARS_PER_REP=10;
+function streakBonus(streak){
+  if(streak>=30) return 400;
+  if(streak>=14) return 200;
+  if(streak>=7) return 100;
+  if(streak>=3) return 50;
+  if(streak>=2) return 20;
+  return 0;
+}
+function nextMilestoneText(streak){
+  const next=STREAK_MILESTONES.find(m=>m>streak);
+  return next ? (next-streak)+' more day'+(next-streak===1?'':'s')+' to a '+next+'-day streak' : 'Legendary streak!';
+}
+
+const MOCK_LEADERS=[
+  {name:'Big Sal',stars:8200},
+  {name:'Sandy Shredz',stars:6400},
+  {name:'Tank Thompson',stars:5100},
+  {name:'Lola Lifts',stars:3900},
+  {name:'Bicep Barry',stars:2200},
+  {name:'Rookie Rocco',stars:900}
+];
+function renderLeaderboard(){
+  const you={name:'YOU',stars:Number(localStorage.getItem('pushupBest')||0),isYou:true};
+  const all=[...MOCK_LEADERS,you].sort((a,b)=>b.stars-a.stars);
+  const list=document.getElementById('leaderboardList');
+  list.innerHTML='';
+  all.forEach((p,i)=>{
+    const row=document.createElement('div');
+    row.className='lbRow'+(p.isYou?' lbYou':'');
+    const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':(i+1)+'.';
+    row.innerHTML=`<span class="lbRank">${medal}</span><span class="lbName">${p.name}</span><span class="lbStars">⭐ ${p.stars}</span>`;
+    list.appendChild(row);
+  });
+}
+
+const SHOP_ITEMS=[
+  {id:'classic',name:'Classic Cosmo',cost:0,fur:'#ffd85c',tank:'#e2211c',desc:'The original look.'},
+  {id:'gold',name:'Golden Gains',cost:500,fur:'#ffe066',tank:'#a6790a',desc:'Solid gold physique.'},
+  {id:'ocean',name:'Ocean Blue',cost:800,fur:'#7fd4f0',tank:'#1c3a5e',desc:'Cool as the Pacific.'},
+  {id:'camo',name:'Beach Camo',cost:1200,fur:'#a3b06e',tank:'#3d4a24',desc:'Tactical tan, beach ready.'},
+  {id:'chrome',name:'Chrome Champion',cost:2000,fur:'#d9d4c8',tank:'#4a433c',desc:'Iron-plated legend status.'}
+];
+function getOwnedItems(){ return JSON.parse(localStorage.getItem('ownedItems')||'["classic"]'); }
+function getEquippedSkin(){ return localStorage.getItem('mascotSkin')||'classic'; }
+function applyMascotSkin(){
+  const item=SHOP_ITEMS.find(x=>x.id===getEquippedSkin())||SHOP_ITEMS[0];
+  document.documentElement.style.setProperty('--fur',item.fur);
+  document.documentElement.style.setProperty('--tank',item.tank);
+}
+function renderShop(){
+  const balance=Number(localStorage.getItem('pushupBest')||0);
+  document.getElementById('shopBalance').textContent=balance;
+  const owned=getOwnedItems();
+  const equipped=getEquippedSkin();
+  const list=document.getElementById('shopList');
+  list.innerHTML='';
+  SHOP_ITEMS.forEach(item=>{
+    const isOwned=owned.includes(item.id);
+    const isEquipped=equipped===item.id;
+    const row=document.createElement('div');
+    row.className='shopItem';
+    const btnHtml = isEquipped
+      ? `<button class="shopBtn equipped" disabled>EQUIPPED</button>`
+      : isOwned
+        ? `<button class="shopBtn equip" onclick="equipItem('${item.id}')">EQUIP</button>`
+        : `<button class="shopBtn buy" ${balance<item.cost?'disabled':''} onclick="buyItem('${item.id}')">${item.cost} ⭐</button>`;
+    row.innerHTML=`
+      <div class="shopSwatch" style="background:radial-gradient(circle at 35% 30%,${item.fur},${item.tank} 75%)"></div>
+      <div class="shopInfo"><div class="shopName">${item.name}</div><div class="shopDesc">${item.desc}</div></div>
+      ${btnHtml}`;
+    list.appendChild(row);
+  });
+}
+function buyItem(id){
+  const item=SHOP_ITEMS.find(x=>x.id===id);
+  const balance=Number(localStorage.getItem('pushupBest')||0);
+  if(!item || balance<item.cost) return;
+  localStorage.setItem('pushupBest', String(balance-item.cost));
+  const owned=getOwnedItems();
+  owned.push(id);
+  localStorage.setItem('ownedItems', JSON.stringify(owned));
+  localStorage.setItem('mascotSkin', id);
+  applyMascotSkin();
+  renderShop();
+  updateMap();
+}
+function equipItem(id){
+  localStorage.setItem('mascotSkin', id);
+  applyMascotSkin();
+  renderShop();
+}
+
+function showInfo(html){
+  document.getElementById('infoContent').innerHTML=html;
+  document.getElementById('infoModal').style.display='flex';
+}
+function closeInfo(){ document.getElementById('infoModal').style.display='none'; }
+function showStarsInfo(){
+  const rows=[
+    ['No streak (day 1)','+0 bonus'],
+    ['2-day streak','+20 bonus'],
+    ['3–6 day streak','+50 bonus'],
+    ['7–13 day streak','+100 bonus'],
+    ['14–29 day streak','+200 bonus'],
+    ['30+ day streak','+400 bonus']
+  ];
+  const rowsHtml=rows.map(r=>`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--steel);font-size:13px">
+    <span>${r[0]}</span><span style="color:var(--yellow);font-weight:800;font-family:Anton,Impact,sans-serif">${r[1]}</span></div>`).join('');
+  showInfo(`
+    <h2 style="margin-top:0">⭐ HOW STARS WORK</h2>
+    <p style="font-size:14px;line-height:1.5;color:var(--ink)">Every rep earns <b style="color:var(--yellow)">${STARS_PER_REP} stars</b>. Stars are pure currency — spend them in the <b>Swag Shop</b> on cosmetic skins for Coach Cosmo. They don't unlock levels; that's all about daily progress.</p>
+    <p style="font-size:14px;line-height:1.5;color:var(--ink)">Finish your <b>one level a day</b> and your streak grows. A longer streak pays a bonus on top of your reps stars, added the moment you finish that day's level:</p>
+    ${rowsHtml}
+    <p class="tiny" style="margin-top:10px">Bonuses only apply to your daily level — Quick Pushup sessions earn reps stars but no streak bonus. Miss a day and the streak (and its bonus tier) resets to day 1.</p>
+  `);
+}
+
+function getUnlockedCount(){ return Math.min(getMaxAllowed(), 1+getLevelsCompleted()); }
+function hasPlayedLevelToday(){ return localStorage.getItem('lastLevelDate')===todayStr(); }
+
+function getHistory(){
+  try{ return JSON.parse(localStorage.getItem('levelHistory')||'{}'); }
+  catch(e){ return {}; }
+}
+function recordCompletion(levelNum, reps){
+  const h=getHistory();
+  const key=String(levelNum);
+  if(!h[key]) h[key]=[];
+  h[key].push({at:new Date().toISOString(), reps});
+  localStorage.setItem('levelHistory', JSON.stringify(h));
+}
+function formatStamp(iso){
+  const d=new Date(iso);
+  const datePart=d.toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'});
+  const timePart=d.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'});
+  return datePart+' at '+timePart;
+}
+function renderLevelHistory(levelNum){
+  const box=document.getElementById('levelHistory');
+  const entries=(getHistory()[String(levelNum)]||[]).slice().reverse();
+  if(!entries.length){
+    box.style.display='none';
+    box.innerHTML='';
+    return;
+  }
+  const last=entries[0];
+  const times=entries.length;
+  let html=`<div class="histHead">✅ Last completed ${formatStamp(last.at)}</div>`;
+  html+=`<div class="histCount">Completed ${times} time${times===1?'':'s'}</div>`;
+  if(times>1){
+    html+='<div class="histList">'+entries.map((e,i)=>
+      `<div class="histRow"><span>${i===0?'Most recent':'#'+(times-i)}</span><span>${formatStamp(e.at)} · ${e.reps} reps</span></div>`
+    ).join('')+'</div>';
+  }
+  box.innerHTML=html;
+  box.style.display='block';
+}
+
+function selectLevel(n){
+  selectedLevel=n;
+  const lvl=ALL_LEVELS[n-1];
+  document.getElementById('levelTitle').textContent='Day '+n+': '+lvl.name;
+  document.getElementById('levelDesc').textContent=lvl.desc+' '+lvl.reps+' reps.';
+  renderLevelHistory(n);
+  refreshLevelCard();
+}
+function refreshLevelCard(){
+  const unlockedCount=getUnlockedCount();
+  const maxAllowed=getMaxAllowed();
+  const btn=document.getElementById('startLevelBtn');
+  const status=document.getElementById('dailyStatus');
+  const playedToday=hasPlayedLevelToday();
+  if(selectedLevel>maxAllowed){
+    btn.disabled=false; btn.textContent='UNLOCK FULL GAME 💎';
+    status.style.display='block'; status.textContent='This day is part of the Full Game — tap to see what unlocking gets you.';
+  } else if(selectedLevel>unlockedCount){
+    btn.disabled=true; btn.textContent='LOCKED 🔒';
+    status.style.display='block'; status.textContent='Beat the earlier levels to unlock this one.';
+  } else if(playedToday){
+    btn.disabled=true; btn.textContent='COME BACK TOMORROW';
+    status.style.display='block'; status.textContent="You've already crushed today's level. One level a day — rest up!";
+  } else {
+    btn.disabled=false; btn.textContent='START LEVEL ⭐';
+    status.style.display='none';
+  }
+}
+function startSelected(){
+  const maxAllowed=getMaxAllowed();
+  if(selectedLevel>maxAllowed){ show('buy'); renderBuyScreen(); return; }
+  const unlockedCount=getUnlockedCount();
+  if(selectedLevel>unlockedCount){ alert('Complete the earlier levels to unlock this challenge!'); return; }
+  if(hasPlayedLevelToday()){ alert("You've already done your one level for today. Come back tomorrow for the next challenge!"); return; }
+  isLevelSession=true;
+  goal=ALL_LEVELS[selectedLevel-1].reps;
+  startWorkout();
+}
+function startQuickWorkout(){
+  isLevelSession=false;
+  startWorkout();
+}
+
+function applyWorldDecor(ow){
+  const r=document.documentElement.style;
+  r.setProperty('--mapSky1',ow.decor.sky1); r.setProperty('--mapSky2',ow.decor.sky2);
+  r.setProperty('--mapGround1',ow.decor.ground1); r.setProperty('--mapGround2',ow.decor.ground2);
+  r.setProperty('--mapSun1',ow.decor.sun1); r.setProperty('--mapSun2',ow.decor.sun2);
+  r.setProperty('--mapWave1',ow.decor.wave1); r.setProperty('--mapWave2',ow.decor.wave2);
+  document.getElementById('mapSign').innerHTML=ow.decor.sign;
+  document.getElementById('mapBird1').textContent=ow.decor.bird;
+  document.getElementById('mapBird2').textContent=ow.decor.bird;
+  document.getElementById('mapPalm1').textContent=ow.decor.palm;
+  document.getElementById('mapPalm2').textContent=ow.decor.palm;
+}
+
+function renderWorldTabs(){
+  const wrap=document.getElementById('worldTabs');
+  wrap.innerHTML='';
+  const maxAllowed=getMaxAllowed();
+  const unlocked=getUnlockedCount();
+  OVERWORLDS.forEach((ow,idx)=>{
+    const reached=ow.startIndex<unlocked;
+    const needsPurchase=ow.startIndex>=maxAllowed;
+    const btn=document.createElement('button');
+    btn.className='worldTab'+(idx===currentWorldIdx?' active':'')+((!reached||needsPurchase)?' locked':'');
+    const icon=needsPurchase?'💎':(reached?ow.icon:'🔒');
+    btn.innerHTML=icon+'<br>'+ow.short;
+    btn.onclick=()=>{
+      if(needsPurchase){ show('buy'); renderBuyScreen(); return; }
+      if(!reached) return;
+      currentWorldIdx=idx;
+      renderWorldTabs();
+      renderWorldMap(idx);
+    };
+    wrap.appendChild(btn);
+  });
+}
+
+const ISO_TILE_W=210, ISO_TILE_H=130, ISO_PAD=110;
+const ISO_AMP1=1.7, ISO_FREQ1=0.75, ISO_AMP2=0.6, ISO_FREQ2=1.9;
+let currentLayout=null;
+let panX=0, panY=0;
+
+function computeWorldLayout(ow){
+  const n=ow.days;
+  const raw=[];
+  for(let j=0;j<n;j++){
+    const gy=(n-1-j); // day 1 gets the largest gy -> bottom of the map; later days climb upward
+    const gx=ISO_AMP1*Math.sin(j*ISO_FREQ1)+ISO_AMP2*Math.sin(j*ISO_FREQ2+1.3); // smooth organic wander, squiggly rather than a rigid zigzag
+    raw.push({x:(gx-gy)*(ISO_TILE_W/2), y:(gx+gy)*(ISO_TILE_H/2)});
+  }
+  const xs=raw.map(p=>p.x), ys=raw.map(p=>p.y);
+  const minX=Math.min(...xs), maxX=Math.max(...xs);
+  const minY=Math.min(...ys), maxY=Math.max(...ys);
+  const offX=-minX+ISO_PAD, offY=-minY+ISO_PAD;
+  return {
+    positions: raw.map(p=>({x:p.x+offX, y:p.y+offY})),
+    width:(maxX-minX)+ISO_PAD*2,
+    height:(maxY-minY)+ISO_PAD*2
+  };
+}
+
+function buildSmoothPath(points){
+  if(points.length<2) return '';
+  if(points.length===2) return `M ${points[0].x} ${points[0].y} L ${points[1].x} ${points[1].y}`;
+  let d=`M ${points[0].x} ${points[0].y} `;
+  const n=points.length;
+  for(let i=0;i<n-1;i++){
+    const p0=points[Math.max(0,i-1)];
+    const p1=points[i];
+    const p2=points[i+1];
+    const p3=points[Math.min(n-1,i+2)];
+    const c1x=p1.x+(p2.x-p0.x)/6, c1y=p1.y+(p2.y-p0.y)/6;
+    const c2x=p2.x-(p3.x-p1.x)/6, c2y=p2.y-(p3.y-p1.y)/6;
+    d+=`C ${c1x} ${c1y}, ${c2x} ${c2y}, ${p2.x} ${p2.y} `;
+  }
+  return d;
+}
+
+function applyPan(){
+  document.getElementById('mapInner').style.transform=`translate(${panX}px,${panY}px)`;
+}
+function clampPan(){
+  const area=document.getElementById('mapScrollArea');
+  if(!area || !currentLayout) return;
+  const vw=area.clientWidth, vh=area.clientHeight;
+  const cw=currentLayout.width, ch=currentLayout.height;
+  const marginX=Math.min(150, vw*0.4), marginY=Math.min(150, vh*0.4);
+  const lo=(a,b)=>Math.min(a,b), hi=(a,b)=>Math.max(a,b);
+  const boundAX=vw-cw-marginX, boundBX=marginX;
+  const boundAY=vh-ch-marginY, boundBY=marginY;
+  panX=Math.min(hi(boundAX,boundBX), Math.max(lo(boundAX,boundBX), panX));
+  panY=Math.min(hi(boundAY,boundBY), Math.max(lo(boundAY,boundBY), panY));
+}
+function centerOn(x,y){
+  const area=document.getElementById('mapScrollArea');
+  if(!area) return;
+  panX=area.clientWidth/2-x;
+  panY=area.clientHeight/2-y;
+  clampPan();
+  applyPan();
+}
+function centerOnFrontier(){
+  const unlocked=getUnlockedCount();
+  const frontier=Math.max(0, Math.min(TOTAL_LEVELS-1, unlocked-1));
+  const wIdx=getWorldIndexForGlobal(frontier);
+  if(wIdx!==currentWorldIdx){
+    renderWorldTabs();
+    renderWorldMap(wIdx);
+    return;
+  }
+  const ow=OVERWORLDS[wIdx];
+  const p=currentLayout.positions[frontier-ow.startIndex];
+  centerOn(p.x,p.y);
+}
+function initPan(){
+  const area=document.getElementById('mapScrollArea');
+  if(!area || area.dataset.panInit) return;
+  area.dataset.panInit='1';
+  let dragging=false, moved=false, startX=0, startY=0, baseX=0, baseY=0;
+  area.addEventListener('pointerdown',e=>{
+    dragging=true; moved=false;
+    startX=e.clientX; startY=e.clientY; baseX=panX; baseY=panY;
+    area.classList.add('dragging');
+  });
+  window.addEventListener('pointermove',e=>{
+    if(!dragging) return;
+    const dx=e.clientX-startX, dy=e.clientY-startY;
+    if(Math.abs(dx)>6||Math.abs(dy)>6) moved=true;
+    if(moved){
+      panX=baseX+dx; panY=baseY+dy;
+      clampPan();
+      applyPan();
+    }
+  });
+  function endDrag(){ dragging=false; area.classList.remove('dragging'); }
+  window.addEventListener('pointerup',endDrag);
+  window.addEventListener('pointercancel',endDrag);
+  area.addEventListener('click',e=>{
+    if(moved){ e.preventDefault(); e.stopPropagation(); }
+    moved=false;
+  }, true);
+}
+
+function renderWorldMap(worldIdx){
+  currentWorldIdx=worldIdx;
+  const ow=OVERWORLDS[worldIdx];
+  applyWorldDecor(ow);
+  const layout=computeWorldLayout(ow);
+  currentLayout=layout;
+  const inner=document.getElementById('mapInner');
+  inner.innerHTML='';
+  inner.style.width=layout.width+'px';
+  inner.style.height=layout.height+'px';
+
+  const unlocked=getUnlockedCount();
+  const maxAllowed=getMaxAllowed();
+  const frontier=unlocked-1;
+  const playedToday=hasPlayedLevelToday();
+  const history=getHistory();
+
+  const svgNS='http://www.w3.org/2000/svg';
+  const svg=document.createElementNS(svgNS,'svg');
+  svg.setAttribute('width', layout.width);
+  svg.setAttribute('height', layout.height);
+  svg.classList.add('mapPathSvg');
+  const d=buildSmoothPath(layout.positions);
+  const outline=document.createElementNS(svgNS,'path');
+  outline.setAttribute('d',d);
+  outline.setAttribute('fill','none');
+  outline.setAttribute('stroke','var(--black)');
+  outline.setAttribute('stroke-width','15');
+  outline.setAttribute('stroke-linecap','round');
+  outline.setAttribute('stroke-linejoin','round');
+  svg.appendChild(outline);
+  const trail=document.createElementNS(svgNS,'path');
+  trail.setAttribute('d',d);
+  trail.setAttribute('fill','none');
+  trail.setAttribute('stroke','#fff8e6');
+  trail.setAttribute('stroke-width','9');
+  trail.setAttribute('stroke-linecap','round');
+  trail.setAttribute('stroke-linejoin','round');
+  trail.setAttribute('stroke-dasharray','2 20');
+  svg.appendChild(trail);
+  inner.appendChild(svg);
+
+  for(let j=0;j<ow.days;j++){
+    const globalIdx=ow.startIndex+j;
+    const pos=layout.positions[j];
+    const slot=document.createElement('div');
+    slot.className='levelSlot';
+    slot.style.left=pos.x+'px'; slot.style.top=pos.y+'px';
+    const shadow=document.createElement('div');
+    shadow.className='levelShadow';
+    const btn=document.createElement('button');
+    let icon, label;
+    if(globalIdx>=maxAllowed){
+      btn.className='level locked premium';
+      icon='💎'; label='Premium';
+      btn.onclick=()=>selectLevel(globalIdx+1);
+    } else if(globalIdx>=unlocked){
+      btn.className='level locked';
+      icon='🔒'; label=ow.levels[j].reps+' reps';
+      btn.onclick=()=>selectLevel(globalIdx+1);
+    } else if(globalIdx===frontier && playedToday){
+      btn.className='level unlocked cooldown';
+      icon='🌙'; label='Tomorrow';
+      btn.onclick=()=>selectLevel(globalIdx+1);
+    } else {
+      btn.className='level unlocked'+(globalIdx===frontier?' current':'');
+      icon='⭐'; label=ow.levels[j].reps+' reps';
+      btn.onclick=()=>selectLevel(globalIdx+1);
+    }
+    btn.innerHTML=`${icon}<small>${j+1}</small><b>${label}</b>`;
+    const doneTimes=(history[String(globalIdx+1)]||[]).length;
+    if(doneTimes>0){
+      const badge=document.createElement('span');
+      badge.className='doneBadge';
+      badge.textContent=doneTimes>1?('✅'+doneTimes):'✅';
+      btn.appendChild(badge);
+    }
+    slot.appendChild(shadow);
+    slot.appendChild(btn);
+    inner.appendChild(slot);
+  }
+
+  initPan();
+  requestAnimationFrame(()=>{
+    let targetJ;
+    if(frontier>=ow.startIndex && frontier<ow.startIndex+ow.days) targetJ=frontier-ow.startIndex;
+    else if(frontier>=ow.startIndex+ow.days) targetJ=ow.days-1;
+    else targetJ=0;
+    const p=layout.positions[targetJ];
+    centerOn(p.x,p.y);
+  });
+}
+
+function updateMap(){
+  const best=Number(localStorage.getItem('pushupBest')||0);
+  document.getElementById('mapStars').textContent=best;
+  const unlocked=getUnlockedCount();
+  const frontierGlobal=Math.max(0, Math.min(TOTAL_LEVELS-1, unlocked-1));
+  currentWorldIdx=getWorldIndexForGlobal(frontierGlobal);
+  renderWorldTabs();
+  renderWorldMap(currentWorldIdx);
+  selectLevel(frontierGlobal+1);
+  const streak=getStreak();
+  document.getElementById('streakCount').textContent=streak;
+  document.getElementById('streakNext').textContent = hasPlayedLevelToday()
+    ? "Today's level is done — nice work!"
+    : nextMilestoneText(streak);
+}
+
+function renderBuyScreen(){
+  const wrap=document.getElementById('worldPreviewList');
+  wrap.innerHTML=OVERWORLDS.map(ow=>
+    `<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:2px solid var(--steel);font-size:14px">
+      <span>${ow.icon} ${ow.name}</span><span style="color:var(--muted)">${ow.days} days${ow.free?' (FREE)':''}</span>
+    </div>`).join('');
+}
+function simulatePurchase(){
+  if(!confirm('This is a prototype — simulate purchasing the Full Game for $4.99? No real payment will be processed.')) return;
+  localStorage.setItem('hasFullGame','1');
+  alert('🎉 Full Game unlocked! (demo purchase — no real payment was made)');
+  show('map');
+  updateMap();
+}
+
+function resetProgress(){
+  if(!confirm("Reset all progress, stars, streaks and unlocked levels? This can't be undone.")) return;
+  ['pushupBest','levelsCompleted','lastLevelDate','streakCount','lastStreakDate','ownedItems','mascotSkin','hasFullGame','levelHistory'].forEach(k=>localStorage.removeItem(k));
+  applyMascotSkin();
+  updateMap();
+}
+
+document.querySelectorAll('.choice').forEach(b=>{
+  b.onclick=()=>{
+    document.querySelectorAll('.choice').forEach(x=>x.classList.remove('selected'));
+    b.classList.add('selected'); goal=+b.dataset.goal;
+  };
+});
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.getElementById('sideTabs').classList.toggle('hide', id==='workout');
+}
+function startWorkout(){
+  count=0;
+  repState='up'; minElbowDuringDown=999;
+  document.getElementById('goal').textContent=goal;
+  document.getElementById('count').textContent=0;
+  document.getElementById('stars').textContent=0;
+  document.getElementById('bar').style.width='0%';
+  setFeedback('Get into pushup position. The AI will start counting automatically once it can see your shoulders, elbows and hips.','');
+  show('workout');
+}
+
+function stopEverything(){
+  if(rafId) cancelAnimationFrame(rafId);
+  rafId=null;
+  if(stream){ stream.getTracks().forEach(t=>t.stop()); stream=null; }
+  document.getElementById('camera').classList.remove('on');
+}
+
+async function flipCamera(){
+  currentFacing = currentFacing==='environment' ? 'user' : 'environment';
+  if(stream){ stream.getTracks().forEach(t=>t.stop()); }
+  await startCameraStream();
+}
+
+async function startCameraStream(){
+  stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:currentFacing},audio:false});
+  const v=document.getElementById('video'); v.srcObject=stream;
+  await new Promise(res=>{ v.onloadedmetadata=()=>{ v.play(); res(); }; });
+  document.getElementById('camera').classList.add('on');
+}
+
+async function enableCamera(){
+  try{
+    await startCameraStream();
+  }catch(e){
+    setFeedback('Camera permission was not available. You can still tap the manual rep buttons to test the game loop.','warn');
+    return;
+  }
+  try{
+    await loadModel();
+    document.getElementById('modelBadge').textContent='AI tracking on';
+    detectLoop();
+  }catch(e){
+    document.getElementById('modelBadge').textContent='AI unavailable';
+    setFeedback('Pose model failed to load (check your connection). Use the manual rep buttons instead.','warn');
+  }
+}
+
+async function loadModel(){
+  if(detector) return detector;
+  document.getElementById('modelBadge').textContent='Loading AI…';
+  await tf.setBackend('webgl');
+  await tf.ready();
+  detector=await poseDetection.createDetector(
+    poseDetection.SupportedModels.MoveNet,
+    {modelType: poseDetection.movenet.modelType.SINGLEPOSE_LIGHTNING}
+  );
+  return detector;
+}
+
+function kp(pose,name){ return pose.keypoints.find(k=>k.name===name); }
+
+function angleAt(a,b,c){
+  // angle at vertex b, formed by points a-b-c, in degrees
+  const v1x=a.x-b.x, v1y=a.y-b.y, v2x=c.x-b.x, v2y=c.y-b.y;
+  const dot=v1x*v2x+v1y*v2y;
+  const mag1=Math.hypot(v1x,v1y), mag2=Math.hypot(v2x,v2y);
+  if(mag1===0||mag2===0) return null;
+  let cos=dot/(mag1*mag2);
+  cos=Math.max(-1,Math.min(1,cos));
+  return Math.acos(cos)*180/Math.PI;
+}
+
+function pickSide(pose){
+  const names=['shoulder','elbow','wrist','hip','ankle'];
+  const score=side=>names.reduce((s,n)=>{
+    const p=kp(pose,'left_'===side?'left_'+n:'right_'+n);
+    return s+(p?p.score:0);
+  },0);
+  const leftScore=score('left'), rightScore=score('right');
+  return leftScore>=rightScore ? 'left' : 'right';
+}
+
+function setFeedback(text,cls){
+  const f=document.getElementById('feedback');
+  f.textContent=text;
+  f.className='feedback'+(cls?(' '+cls):'');
+}
+
+function detectLoop(){
+  const video=document.getElementById('video');
+  const canvas=document.getElementById('overlay');
+  const ctx=canvas.getContext('2d');
+
+  async function frame(){
+    if(!detector || video.readyState<2){ rafId=requestAnimationFrame(frame); return; }
+    canvas.width=canvas.clientWidth;
+    canvas.height=canvas.clientHeight;
+
+    const poses=await detector.estimatePoses(video,{flipHorizontal:false});
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    if(poses.length){
+      const pose=poses[0];
+      drawSkeleton(ctx,pose,video,canvas);
+      evaluateRep(pose);
+    }else{
+      setFeedback('Step into frame so the camera can see your whole body.','warn');
+    }
+    rafId=requestAnimationFrame(frame);
+  }
+  rafId=requestAnimationFrame(frame);
+}
+
+function mapPoint(p,video,canvas){
+  // reproduce object-fit:contain mapping from video pixel space to canvas CSS space
+  const vw=video.videoWidth, vh=video.videoHeight;
+  const cw=canvas.width, ch=canvas.height;
+  const scale=Math.min(cw/vw, ch/vh);
+  const offX=(cw-vw*scale)/2, offY=(ch-vh*scale)/2;
+  return { x:p.x*scale+offX, y:p.y*scale+offY };
+}
+
+const SKELETON=[
+  ['left_shoulder','right_shoulder'],
+  ['left_shoulder','left_elbow'],['left_elbow','left_wrist'],
+  ['right_shoulder','right_elbow'],['right_elbow','right_wrist'],
+  ['left_shoulder','left_hip'],['right_shoulder','right_hip'],
+  ['left_hip','right_hip'],
+  ['left_hip','left_knee'],['left_knee','left_ankle'],
+  ['right_hip','right_knee'],['right_knee','right_ankle']
+];
+
+function drawSkeleton(ctx,pose,video,canvas){
+  ctx.lineWidth=4;
+  ctx.strokeStyle='rgba(255,214,92,0.9)';
+  ctx.fillStyle='#e2211c';
+  SKELETON.forEach(([a,b])=>{
+    const pa=kp(pose,a), pb=kp(pose,b);
+    if(pa&&pb&&pa.score>CONF_MIN&&pb.score>CONF_MIN){
+      const ma=mapPoint(pa,video,canvas), mb=mapPoint(pb,video,canvas);
+      ctx.beginPath(); ctx.moveTo(ma.x,ma.y); ctx.lineTo(mb.x,mb.y); ctx.stroke();
+    }
+  });
+  pose.keypoints.forEach(p=>{
+    if(p.score>CONF_MIN){
+      const m=mapPoint(p,video,canvas);
+      ctx.beginPath(); ctx.arc(m.x,m.y,5,0,7); ctx.fill();
+    }
+  });
+}
+
+function evaluateRep(pose){
+  const side=pickSide(pose);
+  const shoulder=kp(pose,side+'_shoulder'), elbow=kp(pose,side+'_elbow'),
+        wrist=kp(pose,side+'_wrist'), hip=kp(pose,side+'_hip'), ankle=kp(pose,side+'_ankle');
+
+  const needed=[shoulder,elbow,wrist,hip];
+  if(needed.some(p=>!p||p.score<CONF_MIN)){
+    setFeedback('Move so your shoulder, elbow, wrist and hip are all visible from the side.','warn');
+    return;
+  }
+
+  const elbowAngle=angleAt(shoulder,elbow,wrist);
+  if(elbowAngle===null) return;
+
+  let hipAngle=null;
+  if(ankle && ankle.score>CONF_MIN){
+    hipAngle=angleAt(shoulder,hip,ankle);
+  }
+
+  const now=performance.now();
+
+  if(repState==='up' && elbowAngle<DOWN_ENTER){
+    repState='down';
+    minElbowDuringDown=elbowAngle;
+    setFeedback('Down phase — now push back up!','');
+  } else if(repState==='down'){
+    minElbowDuringDown=Math.min(minElbowDuringDown,elbowAngle);
+    if(elbowAngle>UP_ENTER){
+      if(minElbowDuringDown<=GOOD_DEPTH && now-lastRepAt>500){
+        lastRepAt=now;
+        completeRep();
+        setFeedback('Nice rep! ⭐ Full range of motion.','good');
+      } else if(now-lastRepAt>500){
+        setFeedback('Almost — bend your elbows further for it to count.','warn');
+      }
+      repState='up';
+      minElbowDuringDown=999;
+    }
+  } else if(hipAngle!==null && hipAngle<HIP_STRAIGHT_MIN){
+    setFeedback('Keep your body in a straight line — hips are sagging or piking.','warn');
+  }
+}
+
+const COACH_LINES=["FEEL THE BURN!","NO PAIN NO GAIN!","PUMP IT UP!","ONE MORE, CHAMP!","THAT'S IRON WILL!","LOCK IN THAT FORM!"];
+function cheerCoach(){
+  const m=document.getElementById('coachMascot');
+  m.classList.remove('cheer'); void m.offsetWidth; m.classList.add('cheer');
+  document.getElementById('coachLine').textContent=COACH_LINES[Math.floor(Math.random()*COACH_LINES.length)];
+}
+
+function completeRep(){
+  if(count>=goal) return;
+  count++;
+  document.getElementById('count').textContent=count;
+  document.getElementById('stars').textContent=count*STARS_PER_REP;
+  document.getElementById('bar').style.width=(count/goal*100)+'%';
+  cheerCoach();
+  if(count>=goal) finishWorkout();
+}
+
+function rep(){
+  if(count>=goal) return;
+  count++;
+  document.getElementById('count').textContent=count;
+  document.getElementById('stars').textContent=count*STARS_PER_REP;
+  document.getElementById('bar').style.width=(count/goal*100)+'%';
+  setFeedback('Manual rep added.','good');
+  cheerCoach();
+  if(count>=goal) finishWorkout();
+}
+function undoRep(){
+  if(count<=0) return;
+  count--;
+  document.getElementById('count').textContent=count;
+  document.getElementById('stars').textContent=count*STARS_PER_REP;
+  document.getElementById('bar').style.width=(count/goal*100)+'%';
+}
+
+function finishWorkout(){
+  let bonus=0, newStreak=null, milestoneHit=null;
+
+  if(isLevelSession){
+    recordCompletion(selectedLevel, count);
+    const completed=getLevelsCompleted();
+    if(selectedLevel>completed){
+      localStorage.setItem('levelsCompleted', String(Math.min(TOTAL_LEVELS,completed+1)));
+    }
+    const today=todayStr(), yest=yesterdayStr();
+    const lastStreakDate=localStorage.getItem('lastStreakDate');
+    const prevStreak=getStreak();
+    if(lastStreakDate===yest) newStreak=prevStreak+1;
+    else if(lastStreakDate===today) newStreak=prevStreak; // shouldn't happen, daily lock prevents this
+    else newStreak=1; // first level ever, or a missed day reset the streak
+    localStorage.setItem('streakCount', String(newStreak));
+    localStorage.setItem('lastStreakDate', today);
+    localStorage.setItem('lastLevelDate', today);
+    bonus=streakBonus(newStreak);
+    if(STREAK_MILESTONES.includes(newStreak)) milestoneHit=newStreak;
+  }
+
+  const repStars=count*STARS_PER_REP;
+  const totalEarned=repStars+bonus;
+  const oldBest=Number(localStorage.getItem('pushupBest')||0);
+  localStorage.setItem('pushupBest', String(oldBest+totalEarned));
+
+  document.getElementById('finalScore').textContent=count;
+
+  const bonusLine=document.getElementById('bonusLine');
+  if(bonus>0){
+    bonusLine.style.display='block';
+    bonusLine.textContent=`${repStars} for reps + ${bonus} for your ${newStreak}-day streak 🔥`;
+  } else {
+    bonusLine.style.display='none';
+  }
+
+  const banner=document.getElementById('milestoneBanner');
+  if(milestoneHit){
+    banner.style.display='block';
+    banner.textContent=`🔥 ${milestoneHit}-DAY STREAK! KEEP GRINDING!`;
+  } else {
+    banner.style.display='none';
+  }
+
+  setTimeout(()=>{ stopEverything(); show('done'); launchCelebration(totalEarned); },450);
+}
+
+function animateCount(el,from,to,duration){
+  const start=performance.now();
+  function step(now){
+    const t=Math.min(1,(now-start)/duration);
+    const eased=1-Math.pow(1-t,3);
+    el.textContent=Math.round(from+(to-from)*eased);
+    if(t<1) requestAnimationFrame(step);
+    else el.textContent=to;
+  }
+  requestAnimationFrame(step);
+}
+
+function drawStarShape(ctx,cx,cy,r,rot){
+  ctx.beginPath();
+  for(let i=0;i<5;i++){
+    const a1=rot+i*(Math.PI*2/5)-Math.PI/2;
+    const a2=a1+Math.PI/5;
+    const xo=cx+Math.cos(a1)*r, yo=cy+Math.sin(a1)*r;
+    const xi=cx+Math.cos(a2)*r*0.45, yi=cy+Math.sin(a2)*r*0.45;
+    if(i===0) ctx.moveTo(xo,yo); else ctx.lineTo(xo,yo);
+    ctx.lineTo(xi,yi);
+  }
+  ctx.closePath();
+  ctx.fill();
+}
+
+let confettiRAF=null;
+function runConfetti(){
+  const canvas=document.getElementById('confettiCanvas');
+  const ctx=canvas.getContext('2d');
+  const dpr=window.devicePixelRatio||1;
+  const w=window.innerWidth, h=window.innerHeight;
+  canvas.width=w*dpr; canvas.height=h*dpr;
+  canvas.style.width=w+'px'; canvas.style.height=h+'px';
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+
+  const colors=['#ffcf00','#e2211c','#fff6d0','#ffe98a','#d9d4c8'];
+  const particles=[];
+  const cx=w/2, cy=h*0.55;
+  for(let i=0;i<90;i++){
+    const angle=Math.random()*Math.PI*2;
+    const speed=3+Math.random()*7;
+    particles.push({
+      x:cx,y:cy,
+      vx:Math.cos(angle)*speed*(0.4+Math.random()*0.8),
+      vy:Math.sin(angle)*speed-4-Math.random()*4,
+      r:6+Math.random()*8,
+      rot:Math.random()*Math.PI*2,
+      vr:(Math.random()-0.5)*0.3,
+      color:colors[Math.floor(Math.random()*colors.length)]
+    });
+  }
+  const start=performance.now();
+  const DURATION=2200;
+  if(confettiRAF) cancelAnimationFrame(confettiRAF);
+  function frame(now){
+    const elapsed=now-start;
+    ctx.clearRect(0,0,w,h);
+    const life=1-elapsed/DURATION;
+    particles.forEach(p=>{
+      p.vy+=0.16; p.x+=p.vx; p.y+=p.vy; p.rot+=p.vr;
+      if(life>0){
+        ctx.globalAlpha=Math.max(life,0);
+        ctx.fillStyle=p.color;
+        drawStarShape(ctx,p.x,p.y,p.r,p.rot);
+      }
+    });
+    ctx.globalAlpha=1;
+    if(elapsed<DURATION){ confettiRAF=requestAnimationFrame(frame); }
+    else { ctx.clearRect(0,0,w,h); }
+  }
+  confettiRAF=requestAnimationFrame(frame);
+
+  const flash=document.createElement('div');
+  flash.className='flashOverlay';
+  flash.style.animation='screenFlash .5s ease-out forwards';
+  document.body.appendChild(flash);
+  setTimeout(()=>flash.remove(),550);
+}
+
+function launchCelebration(total){
+  document.getElementById('earned').textContent='0';
+  animateCount(document.getElementById('earned'),0,total,900);
+  runConfetti();
+}
+
+function shareResult(){
+  const text=`I just did ${count} pushups with Pushup Star! ⭐`;
+  if(navigator.share) navigator.share({title:'Pushup Star',text});
+  else navigator.clipboard?.writeText(text);
+}
+applyMascotSkin();
+updateMap();
+</script>
+</body>
+</html>
