@@ -18,10 +18,10 @@
   .mTank{fill:var(--tank)}
   *{box-sizing:border-box}
   body{margin:0;
-    background:
-      repeating-linear-gradient(90deg,rgba(255,47,176,.05) 0 2px,transparent 2px 44px),
-      repeating-linear-gradient(0deg,rgba(79,245,255,.05) 0 2px,transparent 2px 44px),
-      linear-gradient(180deg,#1a0f3a 0%,#3a1258 32%,#7a1e5e 55%,#c8442f 78%,#ffb14a 100%);
+    background-image:
+      repeating-linear-gradient(30deg,rgba(255,255,255,.10) 0 2px,transparent 2px 40px),
+      repeating-linear-gradient(-30deg,rgba(0,0,0,.12) 0 2px,transparent 2px 40px),
+      linear-gradient(var(--mapGround1),var(--mapGround2));
     background-attachment:fixed;
     color:var(--ink);font-family:Oswald,"Arial Narrow",Arial,sans-serif}
   .app{max-width:430px;min-height:100vh;margin:auto;padding:22px 18px 30px}
@@ -50,6 +50,12 @@
   .primary:disabled{background:var(--steel);color:#8a8178;box-shadow:5px 5px 0 var(--black);cursor:default}
   .secondary{background:var(--yellow);color:var(--black);width:100%;margin-top:12px;border:3px solid var(--black);box-shadow:4px 4px 0 var(--black);font-family:Anton,Impact,sans-serif}
   .tiny{text-align:center;color:var(--muted);font-size:12px;margin-top:15px;line-height:1.5;text-transform:none;letter-spacing:0;font-weight:400}
+  .mapHeader{position:sticky;top:0;width:auto;margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw);margin-top:-22px;z-index:30;
+    background:var(--panel);border-bottom:3px solid var(--black);box-shadow:0 8px 16px rgba(0,0,0,.4);
+    padding:16px 18px 0}
+  .mapHeader .topbar{margin-bottom:10px;max-width:430px;margin-left:auto;margin-right:auto;font-size:22px}
+  .mapHeader .streakBar{border-radius:0;border:0;border-top:2px solid var(--black);box-shadow:none;
+    background:var(--steel);margin:0 -18px;padding:10px 18px}
   .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;font-weight:900;
     font-family:Anton,Impact,sans-serif;color:var(--yellow);text-transform:uppercase;font-size:15px;letter-spacing:.5px}
   .counter{font-size:56px;font-weight:900;text-align:center;line-height:1;font-family:Anton,Impact,sans-serif;color:var(--red);
@@ -98,13 +104,13 @@
     box-shadow:4px 4px 0 var(--black)}
   .coachCorner .mascot{margin:0;flex-shrink:0}
   .coachCorner span{font-size:12px;font-weight:700;color:var(--chrome);text-transform:uppercase;letter-spacing:.3px}
-  .mapWrap{position:relative;height:460px;border-radius:6px;overflow:hidden;border:3px solid var(--black)}
+  .mapWrap{position:relative;height:582px;overflow:hidden}
+  .mapFullBleed{width:auto;margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw)}
   .mapBg{position:absolute;inset:0;z-index:0;
     background-image:
       repeating-linear-gradient(30deg,rgba(255,255,255,.10) 0 2px,transparent 2px 40px),
       repeating-linear-gradient(-30deg,rgba(0,0,0,.12) 0 2px,transparent 2px 40px),
       linear-gradient(var(--mapGround1),var(--mapGround2))}
-  .mapWrap:after{content:"";position:absolute;left:0;right:0;top:0;height:14px;background:repeating-linear-gradient(-45deg,var(--yellow) 0 14px,var(--black) 14px 28px);z-index:4}
   .mapScroll{position:absolute;inset:0;overflow:hidden;z-index:2;cursor:grab;touch-action:none;user-select:none}
   .mapScroll.dragging{cursor:grabbing}
   .mapInner{position:absolute;top:0;left:0;will-change:transform;
@@ -125,8 +131,12 @@
   .map-waves{position:absolute;left:0;right:0;bottom:0;height:34px;z-index:1;
     background:repeating-linear-gradient(90deg,var(--mapWave1) 0 30px,var(--mapWave2) 30px 60px);
     clip-path:polygon(0% 40%,5% 20%,10% 40%,15% 15%,20% 40%,25% 22%,30% 40%,35% 18%,40% 40%,45% 24%,50% 40%,55% 16%,60% 40%,65% 20%,70% 40%,75% 24%,80% 40%,85% 18%,90% 40%,95% 22%,100% 40%,100% 100%,0% 100%)}
-  .centerBtn{position:absolute;right:10px;bottom:10px;z-index:5;width:44px;height:44px;border-radius:50%;
-    background:var(--yellow);border:3px solid var(--black);box-shadow:3px 3px 0 var(--black);font-size:19px;padding:0}
+  .levelFloatCard{position:absolute;left:12px;right:12px;bottom:12px;z-index:10;
+    background:var(--panel);border:3px solid var(--black);border-radius:14px;
+    padding:12px;text-align:center;box-shadow:0 10px 24px rgba(0,0,0,.5);max-height:62%;overflow-y:auto;
+    transform:scale(.8);transform-origin:bottom center}
+  .centerBtn{position:absolute;top:118px;left:22px;z-index:5;width:40px;height:40px;border-radius:50%;
+    background:var(--yellow);border:3px solid var(--black);box-shadow:3px 3px 0 var(--black);font-size:17px;padding:0}
   .levelSlot{position:absolute;width:0;height:0;z-index:3}
   .levelShadow{position:absolute;left:0;top:-14px;width:74px;height:28px;margin-left:-37px;border-radius:50%;
     background:radial-gradient(ellipse,rgba(0,0,0,.5),rgba(0,0,0,0) 72%);z-index:1}
@@ -141,7 +151,8 @@
     animation:cooldownPulse 1.8s ease-in-out infinite}
   .level.premium{background:radial-gradient(circle at 35% 30%,#a98bff,#5c3ecf 60%,#2c1a6e 100%);box-shadow:0 5px 0 var(--black);color:#f0e9ff}
   @keyframes cooldownPulse{0%,100%{filter:brightness(1)}50%{filter:brightness(1.25)}}
-  .worldTabs{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 10px}
+  .worldTabs{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 10px;scrollbar-width:none;-ms-overflow-style:none}
+  .worldTabs::-webkit-scrollbar{display:none}
   .worldTab{flex-shrink:0;background:var(--panel2);color:var(--chrome);border:3px solid var(--black);border-radius:6px;
     padding:8px 12px;font-family:Anton,Impact,sans-serif;font-size:10px;text-align:center;line-height:1.4;
     box-shadow:3px 3px 0 var(--black);text-transform:uppercase}
@@ -180,6 +191,7 @@
   .sideTab:active{transform:translateX(2px)}
   .sideTab .ico{font-size:22px}
   .sideTab.shopTab{background:var(--red);color:white}
+  .sideTab.mapTab{background:var(--chrome);color:var(--black)}
   .sideTabs.hide{display:none}
   .lbRow{display:flex;align-items:center;gap:10px;padding:10px 8px;border-bottom:2px solid var(--steel);font-family:Oswald,sans-serif}
   .lbRow:last-child{border-bottom:none}
@@ -218,7 +230,20 @@
 <body>
 <div class="app">
 
+<div class="mapHeader" id="mapHeader">
+  <div class="topbar"><span>PUSHUP STAR ⭐</span><span>⭐ <span id="mapStars">0</span></span></div>
+  <div class="streakBar" id="streakBar">
+    <span class="streakFlame">🔥</span>
+    <span><span id="streakCount">0</span>-day streak</span>
+    <button class="infoBtn" onclick="showStarsInfo()" title="How stars work">ℹ️</button>
+    <span class="streakNext" id="streakNext"></span>
+  </div>
+</div>
+
 <div class="sideTabs" id="sideTabs">
+  <button class="sideTab mapTab" onclick="stopEverything();show('map');updateMap()">
+    <span class="ico">🗺️</span><span>Map</span>
+  </button>
   <button class="sideTab" onclick="show('leaderboard');renderLeaderboard()">
     <span class="ico">🏆</span><span>Ranks</span>
   </button>
@@ -228,37 +253,26 @@
 </div>
 
 <section id="map" class="screen active">
-  <div class="topbar"><span>PUSHUP STAR ⭐</span><span>⭐ <span id="mapStars">0</span></span></div>
-  <div class="logo" style="font-size:32px;margin-top:18px">MUSCLE BEACH</div>
-  <div class="tag" style="margin-bottom:10px">Complete pushup challenges to conquer the beach!</div>
-  <div class="streakBar" id="streakBar">
-    <span class="streakFlame">🔥</span>
-    <span><span id="streakCount">0</span>-day streak</span>
-    <button class="infoBtn" onclick="showStarsInfo()" title="How stars work">ℹ️</button>
-    <span class="streakNext" id="streakNext"></span>
-  </div>
-  <div class="worldTabs" id="worldTabs"></div>
-  <div class="card" style="padding:16px;margin-top:6px">
-    <div class="mapWrap">
-      <div class="mapBg"></div>
-      <div class="map-sun"></div>
-      <div class="map-sign" id="mapSign">MUSCLE<br>BEACH</div>
-      <div class="map-bird b1" id="mapBird1">🕊️</div><div class="map-bird b2" id="mapBird2">🕊️</div>
-      <div class="map-palm p1" id="mapPalm1">🌴</div><div class="map-palm p2" id="mapPalm2">🌴</div>
-      <div class="map-waves"></div>
-      <div class="mapScroll" id="mapScrollArea">
-        <div class="mapInner" id="mapInner"></div>
-      </div>
-      <button class="centerBtn" onclick="centerOnFrontier()" title="Find my level">🎯</button>
+  <div class="mapWrap mapFullBleed">
+    <div class="mapBg"></div>
+    <div class="map-sun"></div>
+    <div class="map-sign" id="mapSign">MUSCLE<br>BEACH</div>
+    <button class="centerBtn" onclick="centerOnFrontier()" title="Find my level">🎯</button>
+    <div class="map-bird b1" id="mapBird1">🕊️</div><div class="map-bird b2" id="mapBird2">🕊️</div>
+    <div class="map-palm p1" id="mapPalm1">🌴</div><div class="map-palm p2" id="mapPalm2">🌴</div>
+    <div class="map-waves"></div>
+    <div class="mapScroll" id="mapScrollArea">
+      <div class="mapInner" id="mapInner"></div>
+    </div>
+    <div class="levelFloatCard" id="levelFloatCard">
+      <div style="font-weight:900;font-size:20px" id="levelTitle">Level 1: Rusty Squat Rack</div>
+      <div style="color:var(--muted);margin-top:5px" id="levelDesc">Chalk up, warm-up set.</div>
+      <div class="levelHistory" id="levelHistory" style="display:none"></div>
+      <div class="tiny" id="dailyStatus" style="display:none;color:var(--yellow);font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-top:10px"></div>
+      <button class="primary" id="startLevelBtn" onclick="startSelected()">START LEVEL ⭐</button>
     </div>
   </div>
-  <div class="card" style="margin-top:15px;text-align:center">
-    <div style="font-weight:900;font-size:20px" id="levelTitle">Level 1: Rusty Squat Rack</div>
-    <div style="color:var(--muted);margin-top:5px" id="levelDesc">Chalk up, warm-up set.</div>
-    <div class="levelHistory" id="levelHistory" style="display:none"></div>
-    <div class="tiny" id="dailyStatus" style="display:none;color:var(--yellow);font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-top:10px"></div>
-    <button class="primary" id="startLevelBtn" onclick="startSelected()">START LEVEL ⭐</button>
-  </div>
+  <div class="worldTabs" id="worldTabs" style="margin-top:14px"></div>
   <div class="tiny" style="margin-top:14px;text-align:center">
     <a href="#" onclick="resetProgress();return false;" style="color:var(--muted);text-decoration:underline">Reset progress</a>
   </div>
@@ -302,9 +316,8 @@
 </section>
 
 <section id="workout" class="screen">
-  <button class="back" onclick="stopEverything();show('map')">← Back to map</button>
-  <div class="topbar"><span>PUSHUP STAR</span><span>⭐ <span id="stars">0</span></span></div>
   <div class="counter"><span id="count">0</span> <small>/ <span id="goal">10</span></small></div>
+  <div class="tiny" style="margin-top:6px;margin-bottom:6px">⭐ <span id="stars">0</span> stars this set</div>
   <div class="progress"><div class="bar" id="bar"></div></div>
 
   <div class="camera" id="camera">
@@ -394,14 +407,12 @@
 </section>
 
 <section id="leaderboard" class="screen">
-  <button class="back" onclick="show('map')">← Back to the beach</button>
   <div class="logo" style="font-size:28px;margin-top:10px">🏆 TOP LIFTERS</div>
   <div class="tag" style="margin-bottom:14px">This week at Muscle Beach</div>
   <div class="card" id="leaderboardList" style="padding:6px 10px"></div>
 </section>
 
 <section id="shop" class="screen">
-  <button class="back" onclick="show('map')">← Back to the beach</button>
   <div class="logo" style="font-size:28px;margin-top:10px">🛒 SWAG SHOP</div>
   <div class="tag" style="margin-bottom:6px">Spend your stars on new looks for Coach Cosmo</div>
   <div class="topbar" style="justify-content:center;margin-bottom:14px;gap:10px">⭐ <span id="shopBalance">0</span> stars available
@@ -411,7 +422,6 @@
 </section>
 
 <section id="buy" class="screen">
-  <button class="back" onclick="show('map')">← Back to the beach</button>
   <div class="logo" style="font-size:24px;margin-top:8px">🔓 GO PRO</div>
   <div class="tag" style="margin-bottom:6px">You've conquered Muscle Beach!</div>
   <div class="card" style="text-align:center">
@@ -536,7 +546,9 @@ function streakBonus(streak){
 }
 function nextMilestoneText(streak){
   const next=STREAK_MILESTONES.find(m=>m>streak);
-  return next ? (next-streak)+' more day'+(next-streak===1?'':'s')+' to a '+next+'-day streak' : 'Legendary streak!';
+  if(!next) return 'Legendary streak!';
+  const daysLeft=next-streak;
+  return 'Complete your daily pushups for '+daysLeft+' more day'+(daysLeft===1?'':'s')+' to hit a '+next+'-day streak';
 }
 
 const MOCK_LEADERS=[
@@ -1009,7 +1021,6 @@ document.querySelectorAll('.choice').forEach(b=>{
 function show(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  document.getElementById('sideTabs').classList.toggle('hide', id==='workout');
 }
 function startWorkout(){
   count=0;
