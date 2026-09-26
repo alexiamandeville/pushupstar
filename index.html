@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Pushup Star - Muscle Beach</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Anton&family=Monoton&family=Oswald:wght@500;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap');
   :root {
     --bg:#141210; --panel:#221e1a; --panel2:#2b2521; --ink:#f4ede1; --muted:#b6a89a;
     --red:#e2211c; --red-dark:#8f0f0c; --yellow:#ffcf00; --chrome:#d9d4c8; --steel:#4a423a; --black:#0b0a09;
-    --fur:#ffd85c; --tank:#e2211c;
+    --fur:#ff8fc4; --tank:#ff2f8f;
     --mapSky1:#5ec4e8; --mapSky2:#8ed9ee; --mapGround1:#f4dd9c; --mapGround2:#eccb7c;
     --mapSun1:#fff3b0; --mapSun2:#ffcf00; --mapWave1:#2f9fd0; --mapWave2:#3fb2e0;
     --neonPink:#ff2fb0; --neonCyan:#4ff5ff; --neonPurple:#a24fe0; --neonOrange:#ff8a3d;
@@ -18,16 +18,13 @@
   .mTank{fill:var(--tank)}
   *{box-sizing:border-box}
   body{margin:0;
-    background-image:
-      repeating-linear-gradient(30deg,rgba(255,255,255,.10) 0 2px,transparent 2px 40px),
-      repeating-linear-gradient(-30deg,rgba(0,0,0,.12) 0 2px,transparent 2px 40px),
-      linear-gradient(var(--mapGround1),var(--mapGround2));
+    background:var(--mapGround2);
     background-attachment:fixed;
-    color:var(--ink);font-family:Oswald,"Arial Narrow",Arial,sans-serif}
+    color:var(--ink);font-family:Nunito,"Segoe UI",Arial,sans-serif}
   .app{max-width:430px;min-height:100vh;margin:auto;padding:22px 18px 30px}
   .screen{display:none;min-height:calc(100vh - 52px);flex-direction:column}
   .screen.active{display:flex}
-  .logo{font-family:'Monoton',cursive;font-weight:400;font-size:38px;letter-spacing:2px;text-align:center;margin-top:42px;
+  .logo{font-family:'Fredoka',sans-serif;font-weight:400;font-size:38px;letter-spacing:2px;text-align:center;margin-top:42px;
     color:#fff6ff;text-transform:uppercase;line-height:1.3;
     text-shadow:
       0 0 6px #fff, 0 0 14px var(--neonPink), 0 0 26px var(--neonPink), 0 0 46px var(--neonPink),
@@ -39,16 +36,16 @@
   .star{font-size:74px;text-align:center;margin:8px 0 18px;filter:drop-shadow(0 6px 0 var(--black))}
   .card{background:var(--panel);border:3px solid var(--black);border-radius:6px;padding:22px;
     box-shadow:7px 7px 0 var(--red);position:relative}
-  h2{margin:0 0 16px;font-size:20px;font-family:Anton,Impact,sans-serif;text-transform:uppercase;letter-spacing:.5px;color:var(--yellow)}
+  h2{margin:0 0 16px;font-size:20px;font-family:'Fredoka',sans-serif;text-transform:uppercase;letter-spacing:.5px;color:var(--yellow)}
   .choices{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
   button{border:0;border-radius:4px;padding:15px 12px;font:inherit;font-weight:700;cursor:pointer;transition:.1s transform;text-transform:uppercase;letter-spacing:.5px}
   button:active{transform:translate(3px,3px)}
-  .choice{background:var(--panel2);border:2px solid var(--steel);color:var(--chrome);font-size:20px;font-family:Anton,Impact,sans-serif}
+  .choice{background:var(--panel2);border:2px solid var(--steel);color:var(--chrome);font-size:20px;font-family:'Fredoka',sans-serif}
   .choice.selected{background:var(--red);color:white;border-color:var(--black);box-shadow:3px 3px 0 var(--black)}
   .primary{background:var(--red);color:white;font-size:19px;width:100%;margin-top:18px;
-    border:3px solid var(--black);box-shadow:5px 5px 0 var(--black);font-family:Anton,Impact,sans-serif}
+    border:3px solid var(--black);box-shadow:5px 5px 0 var(--black);font-family:'Fredoka',sans-serif}
   .primary:disabled{background:var(--steel);color:#8a8178;box-shadow:5px 5px 0 var(--black);cursor:default}
-  .secondary{background:var(--yellow);color:var(--black);width:100%;margin-top:12px;border:3px solid var(--black);box-shadow:4px 4px 0 var(--black);font-family:Anton,Impact,sans-serif}
+  .secondary{background:var(--yellow);color:var(--black);width:100%;margin-top:12px;border:3px solid var(--black);box-shadow:4px 4px 0 var(--black);font-family:'Fredoka',sans-serif}
   .tiny{text-align:center;color:var(--muted);font-size:12px;margin-top:15px;line-height:1.5;text-transform:none;letter-spacing:0;font-weight:400}
   .mapHeader{position:sticky;top:0;width:auto;margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw);margin-top:-22px;z-index:30;
     background:var(--panel);border-bottom:3px solid var(--black);box-shadow:0 8px 16px rgba(0,0,0,.4);
@@ -57,13 +54,10 @@
   .mapHeader .streakBar{border-radius:0;border:0;border-top:2px solid var(--black);box-shadow:none;
     background:var(--steel);margin:0 -18px;padding:10px 18px}
   .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;font-weight:900;
-    font-family:Anton,Impact,sans-serif;color:var(--yellow);text-transform:uppercase;font-size:15px;letter-spacing:.5px}
-  .counter{font-size:56px;font-weight:900;text-align:center;line-height:1;font-family:Anton,Impact,sans-serif;color:var(--red);
+    font-family:'Fredoka',sans-serif;color:var(--yellow);text-transform:uppercase;font-size:15px;letter-spacing:.5px}
+  .counter{font-size:56px;font-weight:900;text-align:center;line-height:1;font-family:'Fredoka',sans-serif;color:var(--red);
     text-shadow:3px 3px 0 var(--black)}
-  .counter small{font-size:22px;color:var(--muted);font-family:Oswald,sans-serif}
-  .progress{height:16px;background:var(--black);border-radius:3px;overflow:hidden;margin:16px 0 18px;border:2px solid var(--black)}
-  .bar{height:100%;width:0%;transition:.25s;
-    background:repeating-linear-gradient(-45deg,var(--yellow) 0 10px,var(--red) 10px 20px)}
+  .counter small{font-size:22px;color:var(--muted);font-family:'Nunito',sans-serif}
   .camera{position:relative;aspect-ratio:4/5;border-radius:6px;overflow:hidden;background:var(--black);
     display:flex;align-items:center;justify-content:center;color:white;text-align:center;border:3px solid var(--red)}
   video{width:100%;height:100%;object-fit:contain;display:none;background:#000}
@@ -87,10 +81,10 @@
   .manualRow button{flex:1;font-size:13px;padding:11px}
   .victory{text-align:center;margin-top:42px}
   .victory .bigstar{font-size:105px;filter:drop-shadow(0 8px 0 var(--black))}
-  .victory h1{font-size:44px;margin:8px 0;font-family:Anton,Impact,sans-serif;color:var(--red);text-shadow:3px 3px 0 var(--black);letter-spacing:1px}
-  .score{font-size:76px;font-weight:900;color:var(--yellow);font-family:Anton,Impact,sans-serif;text-shadow:3px 3px 0 var(--black)}
+  .victory h1{font-size:44px;margin:8px 0;font-family:'Fredoka',sans-serif;color:var(--red);text-shadow:3px 3px 0 var(--black);letter-spacing:1px}
+  .score{font-size:76px;font-weight:900;color:var(--yellow);font-family:'Fredoka',sans-serif;text-shadow:3px 3px 0 var(--black)}
   .reward{background:var(--panel);border:3px solid var(--yellow);border-radius:6px;padding:18px;text-align:center;font-size:19px;font-weight:900;margin:20px 0;
-    color:var(--yellow);font-family:Anton,Impact,sans-serif;box-shadow:5px 5px 0 var(--black)}
+    color:var(--yellow);font-family:'Fredoka',sans-serif;box-shadow:5px 5px 0 var(--black)}
   .back{background:none;color:var(--muted);padding:6px 0;font-size:13px;text-align:left;text-transform:uppercase;letter-spacing:.5px;font-weight:700}
   .pulse{animation:pulse .8s infinite alternate}
   @keyframes pulse{to{transform:scale(1.04)}}
@@ -104,47 +98,43 @@
     box-shadow:4px 4px 0 var(--black)}
   .coachCorner .mascot{margin:0;flex-shrink:0}
   .coachCorner span{font-size:12px;font-weight:700;color:var(--chrome);text-transform:uppercase;letter-spacing:.3px}
+  .coachCorner span.good{color:var(--yellow)}
+  .coachCorner span.warn{color:var(--red)}
   .mapWrap{position:relative;height:582px;overflow:hidden}
   .mapFullBleed{width:auto;margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw)}
   .mapBg{position:absolute;inset:0;z-index:0;
-    background-image:
-      repeating-linear-gradient(30deg,rgba(255,255,255,.10) 0 2px,transparent 2px 40px),
-      repeating-linear-gradient(-30deg,rgba(0,0,0,.12) 0 2px,transparent 2px 40px),
-      linear-gradient(var(--mapGround1),var(--mapGround2))}
+    background:var(--mapGround2)}
   .mapScroll{position:absolute;inset:0;overflow:hidden;z-index:2;cursor:grab;touch-action:none;user-select:none}
   .mapScroll.dragging{cursor:grabbing}
   .mapInner{position:absolute;top:0;left:0;will-change:transform;
-    background-image:
-      repeating-linear-gradient(30deg,rgba(255,255,255,.10) 0 2px,transparent 2px 40px),
-      repeating-linear-gradient(-30deg,rgba(0,0,0,.12) 0 2px,transparent 2px 40px),
-      linear-gradient(var(--mapGround1),var(--mapGround2))}
+    background:var(--mapGround2)}
   .mapPathSvg{position:absolute;top:0;left:0;z-index:0;overflow:visible}
   .map-sun{position:absolute;top:8%;right:10%;width:70px;height:70px;border-radius:50%;
     background:radial-gradient(circle,var(--mapSun1),var(--mapSun2) 55%,#ff9d2f 100%);box-shadow:0 0 40px 12px rgba(255,207,0,.35);z-index:1}
   .map-sign{position:absolute;top:6%;left:6%;background:#1a1030;color:#fff6ff;border:3px solid var(--black);border-radius:8px;
-    padding:7px 11px;font-family:'Monoton',cursive;font-weight:400;font-size:13px;line-height:1.3;text-align:center;letter-spacing:1px;
+    padding:7px 11px;font-family:'Fredoka',sans-serif;font-weight:400;font-size:13px;line-height:1.3;text-align:center;letter-spacing:1px;
     text-shadow:0 0 4px #fff,0 0 10px var(--neonPink),0 0 18px var(--neonPink);
     box-shadow:4px 4px 0 var(--black);z-index:4;transform:rotate(-3deg);animation:neonFlicker 3.6s infinite}
-  .map-bird{position:absolute;z-index:2;font-size:20px;opacity:.75}.b1{left:20%;top:14%}.b2{left:55%;top:9%}
-  .map-palm{position:absolute;z-index:2;font-size:44px;filter:drop-shadow(2px 3px 0 rgba(0,0,0,.25))}
-  .p1{left:2%;bottom:8%}.p2{right:0%;bottom:4%;transform:scaleX(-1)}
-  .map-waves{position:absolute;left:0;right:0;bottom:0;height:34px;z-index:1;
-    background:repeating-linear-gradient(90deg,var(--mapWave1) 0 30px,var(--mapWave2) 30px 60px);
-    clip-path:polygon(0% 40%,5% 20%,10% 40%,15% 15%,20% 40%,25% 22%,30% 40%,35% 18%,40% 40%,45% 24%,50% 40%,55% 16%,60% 40%,65% 20%,70% 40%,75% 24%,80% 40%,85% 18%,90% 40%,95% 22%,100% 40%,100% 100%,0% 100%)}
+  .map-palm{position:absolute;font-size:44px;filter:drop-shadow(2px 3px 0 rgba(0,0,0,.25));pointer-events:none;z-index:1}
+  .mapBuddy{position:absolute;left:0;top:-64px;margin-left:-25px;width:50px;height:68px;pointer-events:none;z-index:4;
+    filter:drop-shadow(2px 4px 0 rgba(0,0,0,.3));animation:flexPulse 1.4s ease-in-out infinite}
   .levelFloatCard{position:absolute;left:12px;right:12px;bottom:12px;z-index:10;
     background:var(--panel);border:3px solid var(--black);border-radius:14px;
-    padding:12px;text-align:center;box-shadow:0 10px 24px rgba(0,0,0,.5);max-height:62%;overflow-y:auto;
+    padding:12px;text-align:center;max-height:62%;overflow-y:auto;
     transform:scale(.8);transform-origin:bottom center}
-  .centerBtn{position:absolute;top:118px;left:22px;z-index:5;width:40px;height:40px;border-radius:50%;
-    background:var(--yellow);border:3px solid var(--black);box-shadow:3px 3px 0 var(--black);font-size:17px;padding:0}
+  .centerBtn{position:absolute;bottom:-16px;right:-16px;z-index:5;width:36px;height:36px;border-radius:50%;
+    background:var(--yellow);border:3px solid var(--black);box-shadow:3px 3px 0 var(--black);padding:0;
+    display:flex;align-items:center;justify-content:center;transform:rotate(3deg)}
   .levelSlot{position:absolute;width:0;height:0;z-index:3}
   .levelShadow{position:absolute;left:0;top:-14px;width:74px;height:28px;margin-left:-37px;border-radius:50%;
     background:radial-gradient(ellipse,rgba(0,0,0,.5),rgba(0,0,0,0) 72%);z-index:1}
   .doneBadge{position:absolute;top:-8px;right:-8px;background:#2fa34f;color:white;border:3px solid var(--black);
-    border-radius:20px;font-size:10px;font-family:Anton,Impact,sans-serif;padding:2px 5px;line-height:1.1;min-width:22px}
+    border-radius:20px;font-size:10px;font-family:'Fredoka',sans-serif;padding:2px 5px;line-height:1.1;min-width:22px}
   .level{position:absolute;left:0;top:-78px;margin-left:-38px;z-index:2;width:76px;height:76px;border-radius:50%;border:5px solid var(--black);
-    background:radial-gradient(circle at 35% 30%,#efeae0,var(--chrome) 60%,#9a948a);box-shadow:0 5px 0 var(--black);font-size:24px;color:var(--black);font-family:Anton,Impact,sans-serif}
+    background:radial-gradient(circle at 35% 30%,#efeae0,var(--chrome) 60%,#9a948a);box-shadow:0 5px 0 var(--black);font-size:24px;color:var(--black);font-family:'Fredoka',sans-serif}
   .level small{display:block;font-size:12px}.level b{display:block;font-size:9px;color:#3a352f;white-space:nowrap;text-transform:uppercase}
+  .level .lvlIcon{display:block}
+  .level.locked .lvlIcon{margin-top:-8px;line-height:1}
   .level.locked{background:radial-gradient(circle at 35% 30%,#4f4941,var(--steel) 60%,#332e28);box-shadow:0 5px 0 var(--black);color:var(--muted)}
   .level.current{background:radial-gradient(circle at 35% 30%,#ff5c56,var(--red) 60%,#7a0e0c);box-shadow:0 5px 0 var(--black);color:white}
   .level.cooldown{background:radial-gradient(circle at 35% 30%,#5c6ab8,#2e3766 60%,#1a1f3d);box-shadow:0 5px 0 var(--black);color:#cfd6ff;
@@ -154,21 +144,21 @@
   .worldTabs{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 10px;scrollbar-width:none;-ms-overflow-style:none}
   .worldTabs::-webkit-scrollbar{display:none}
   .worldTab{flex-shrink:0;background:var(--panel2);color:var(--chrome);border:3px solid var(--black);border-radius:6px;
-    padding:8px 12px;font-family:Anton,Impact,sans-serif;font-size:10px;text-align:center;line-height:1.4;
+    padding:8px 12px;font-family:'Fredoka',sans-serif;font-size:10px;text-align:center;line-height:1.4;
     box-shadow:3px 3px 0 var(--black);text-transform:uppercase}
   .worldTab.active{background:var(--red);color:white}
   .worldTab.locked{background:var(--steel);color:#8a8178}
   .streakBar{display:flex;align-items:center;gap:8px;background:var(--panel);border:3px solid var(--black);border-radius:4px;
-    padding:10px 14px;box-shadow:4px 4px 0 var(--yellow);font-family:Anton,Impact,sans-serif;text-transform:uppercase;
+    padding:10px 14px;box-shadow:4px 4px 0 var(--yellow);font-family:'Fredoka',sans-serif;text-transform:uppercase;
     color:var(--ink);font-size:15px;letter-spacing:.5px}
   .streakFlame{font-size:22px;filter:drop-shadow(0 2px 0 var(--black))}
-  .streakNext{margin-left:auto;font-family:Oswald,sans-serif;font-size:11px;color:var(--muted);text-transform:none;letter-spacing:0;font-weight:400}
-  .bonusLine{font-family:Oswald,sans-serif;font-size:15px;color:var(--chrome);margin-top:6px;font-weight:600}
+  .streakNext{margin-left:auto;font-family:'Nunito',sans-serif;font-size:11px;color:var(--muted);text-transform:none;letter-spacing:0;font-weight:400}
+  .bonusLine{font-family:'Nunito',sans-serif;font-size:15px;color:var(--chrome);margin-top:6px;font-weight:600}
   .milestoneBanner{background:var(--red);border:3px solid var(--black);border-radius:4px;padding:12px 16px;margin:16px 0;
-    box-shadow:5px 5px 0 var(--black);font-family:Anton,Impact,sans-serif;color:var(--yellow);text-transform:uppercase;
+    box-shadow:5px 5px 0 var(--black);font-family:'Fredoka',sans-serif;color:var(--yellow);text-transform:uppercase;
     letter-spacing:.5px;font-size:16px;display:none}
   #confettiCanvas{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:60}
-  .jackpotText{font-family:Anton,Impact,sans-serif;font-size:26px;letter-spacing:2px;text-align:center;text-transform:uppercase;
+  .jackpotText{font-family:'Fredoka',sans-serif;font-size:26px;letter-spacing:2px;text-align:center;text-transform:uppercase;
     color:#fff6d0;margin-bottom:4px;
     text-shadow:0 0 6px var(--yellow),0 0 14px var(--yellow),0 0 22px var(--red),2px 2px 0 var(--black);
     animation:neonFlicker 1.1s infinite}
@@ -185,7 +175,7 @@
   .flashOverlay{position:fixed;inset:0;pointer-events:none;z-index:55}
   .sideTabs{position:fixed;top:130px;right:0;z-index:40;display:flex;flex-direction:column;gap:10px}
   .sideTab{background:var(--yellow);color:var(--black);border:3px solid var(--black);border-right:none;
-    border-radius:10px 0 0 10px;padding:10px 10px 10px 14px;font-family:Anton,Impact,sans-serif;font-size:10px;
+    border-radius:10px 0 0 10px;padding:10px 10px 10px 14px;font-family:'Fredoka',sans-serif;font-size:10px;
     letter-spacing:.5px;text-transform:uppercase;box-shadow:-4px 4px 0 var(--black);display:flex;flex-direction:column;
     align-items:center;gap:2px;cursor:pointer;width:52px;transition:transform .1s}
   .sideTab:active{transform:translateX(2px)}
@@ -193,25 +183,25 @@
   .sideTab.shopTab{background:var(--red);color:white}
   .sideTab.mapTab{background:var(--chrome);color:var(--black)}
   .sideTabs.hide{display:none}
-  .lbRow{display:flex;align-items:center;gap:10px;padding:10px 8px;border-bottom:2px solid var(--steel);font-family:Oswald,sans-serif}
+  .lbRow{display:flex;align-items:center;gap:10px;padding:10px 8px;border-bottom:2px solid var(--steel);font-family:'Nunito',sans-serif}
   .lbRow:last-child{border-bottom:none}
-  .lbRank{width:32px;font-family:Anton,Impact,sans-serif;font-size:15px;color:var(--yellow);text-align:center}
+  .lbRank{width:32px;font-family:'Fredoka',sans-serif;font-size:15px;color:var(--yellow);text-align:center}
   .lbName{flex:1;font-weight:700;color:var(--ink);text-transform:uppercase;font-size:14px}
-  .lbStars{font-weight:800;color:var(--yellow);font-family:Anton,Impact,sans-serif;font-size:14px}
+  .lbStars{font-weight:800;color:var(--yellow);font-family:'Fredoka',sans-serif;font-size:14px}
   .lbYou{background:rgba(226,33,28,.28);border-radius:4px;box-shadow:inset 0 0 0 2px var(--red)}
   .shopItem{display:flex;align-items:center;gap:12px;padding:12px 8px;border-bottom:2px solid var(--steel)}
   .shopItem:last-child{border-bottom:none}
   .shopSwatch{width:52px;height:52px;border-radius:50%;border:4px solid var(--black);flex-shrink:0;position:relative}
   .shopInfo{flex:1}
-  .shopName{font-family:Anton,Impact,sans-serif;font-size:15px;color:var(--ink);text-transform:uppercase;letter-spacing:.3px}
+  .shopName{font-family:'Fredoka',sans-serif;font-size:15px;color:var(--ink);text-transform:uppercase;letter-spacing:.3px}
   .shopDesc{font-size:12px;color:var(--muted);margin-top:2px}
-  .shopBtn{font-family:Anton,Impact,sans-serif;font-size:12px;padding:9px 12px;white-space:nowrap;border:3px solid var(--black)}
+  .shopBtn{font-family:'Fredoka',sans-serif;font-size:12px;padding:9px 12px;white-space:nowrap;border:3px solid var(--black)}
   .shopBtn.buy{background:var(--yellow);color:var(--black);box-shadow:3px 3px 0 var(--black)}
   .shopBtn.equipped{background:var(--red);color:white;box-shadow:3px 3px 0 var(--black)}
   .shopBtn.equip{background:var(--panel2);color:var(--chrome);box-shadow:3px 3px 0 var(--black)}
   .shopBtn:disabled{background:var(--steel);color:#8a8178;box-shadow:3px 3px 0 var(--black);cursor:default}
   .levelHistory{margin-top:12px;padding-top:10px;border-top:2px solid var(--steel);text-align:left}
-  .histHead{font-family:Anton,Impact,sans-serif;font-size:13px;color:var(--yellow);text-transform:uppercase;letter-spacing:.4px}
+  .histHead{font-family:'Fredoka',sans-serif;font-size:13px;color:var(--yellow);text-transform:uppercase;letter-spacing:.4px}
   .histCount{font-size:11px;color:var(--muted);margin-top:3px;font-weight:600}
   .histList{margin-top:8px;max-height:132px;overflow-y:auto}
   .histRow{display:flex;justify-content:space-between;gap:8px;font-size:11px;color:var(--chrome);
@@ -256,11 +246,11 @@
   <div class="mapWrap mapFullBleed">
     <div class="mapBg"></div>
     <div class="map-sun"></div>
-    <div class="map-sign" id="mapSign">MUSCLE<br>BEACH</div>
-    <button class="centerBtn" onclick="centerOnFrontier()" title="Find my level">🎯</button>
-    <div class="map-bird b1" id="mapBird1">🕊️</div><div class="map-bird b2" id="mapBird2">🕊️</div>
-    <div class="map-palm p1" id="mapPalm1">🌴</div><div class="map-palm p2" id="mapPalm2">🌴</div>
-    <div class="map-waves"></div>
+    <div class="map-sign" id="mapSign"><span id="mapSignText">MUSCLE<br>BEACH</span>
+      <button class="centerBtn" onclick="centerOnFrontier()" title="Find my level">
+        <svg viewBox="0 0 24 24" width="18" height="18"><path d="M3 11L21 3L13 21L11 13L3 11Z" fill="var(--black)"/></svg>
+      </button>
+    </div>
     <div class="mapScroll" id="mapScrollArea">
       <div class="mapInner" id="mapInner"></div>
     </div>
@@ -281,26 +271,29 @@
 <section id="start" class="screen">
   <div class="logo">PUSHUP <span>STAR</span> ⭐</div>
   <div class="tag">Drop and give me reps. No pain, no gains.</div>
-  <svg class="mascot flex" width="150" height="150" viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="60" cy="55" r="20" fill="#f0c84d"/><circle cx="160" cy="55" r="20" fill="#f0c84d"/>
-    <circle cx="60" cy="55" r="9" fill="#fff2d6"/><circle cx="160" cy="55" r="9" fill="#fff2d6"/>
-    <path d="M62,160 Q28,152 26,114 Q25,92 46,88 Q62,86 63,105 Q65,122 71,142 Z" class="mFur"/>
-    <circle cx="38" cy="106" r="24" class="mFur"/><circle cx="31" cy="87" r="18" class="mFur"/>
-    <rect x="21" y="79" width="26" height="11" rx="5.5" class="mTank"/>
-    <path d="M158,160 Q192,152 194,114 Q195,92 174,88 Q158,86 157,105 Q155,122 149,142 Z" class="mFur"/>
-    <circle cx="182" cy="106" r="24" class="mFur"/><circle cx="189" cy="87" r="18" class="mFur"/>
-    <rect x="173" y="79" width="26" height="11" rx="5.5" class="mTank"/>
-    <ellipse cx="110" cy="178" rx="58" ry="44" class="mFur"/>
-    <path d="M62,152 Q110,133 158,152 L158,200 Q110,214 62,200 Z" class="mTank"/>
-    <polygon points="110,159 114,169 125,169 116,176 119,187 110,180 101,187 104,176 95,169 106,169" fill="#ffcf00"/>
-    <circle cx="110" cy="75" r="52" class="mFur"/>
-    <circle cx="80" cy="92" r="8" fill="#ff9fc4" opacity=".55"/><circle cx="140" cy="92" r="8" fill="#ff9fc4" opacity=".55"/>
-    <ellipse cx="110" cy="87" rx="9" ry="7" fill="#342d3e"/>
-    <rect x="74" y="57" width="30" height="19" rx="9" fill="#1a1030"/><rect x="116" y="57" width="30" height="19" rx="9" fill="#1a1030"/>
-    <rect x="104" y="63" width="12" height="5" rx="2.5" fill="#1a1030"/>
-    <path d="M78,62 Q84,60 90,63" stroke="#ff5fd1" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".85"/>
-    <path d="M120,62 Q126,60 132,63" stroke="#5fe8ff" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".85"/>
-    <path d="M64,100 Q90,80 110,95 Q130,80 156,100 Q142,120 124,106 Q119,122 110,104 Q101,122 96,106 Q78,120 64,100 Z" fill="#6b4a2f"/>
+  <svg class="mascot flex" width="150" height="205" viewBox="0 0 220 300" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="100" cy="284" r="14" class="mFur"/>
+    <ellipse cx="106" cy="260" rx="32" ry="26" class="mFur"/>
+    <ellipse cx="114" cy="218" rx="42" ry="34" class="mFur"/>
+    <ellipse cx="104" cy="170" rx="46" ry="36" class="mFur"/>
+    <ellipse cx="110" cy="118" rx="48" ry="38" class="mFur"/>
+    <path d="M70,240 Q106,252 146,238" stroke="#00000022" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <path d="M62,194 Q108,208 158,192" stroke="#00000022" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <path d="M64,144 Q110,158 156,142" stroke="#00000022" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <path d="M62,152 Q28,144 26,106 Q25,84 46,80 Q62,78 63,97 Q65,114 71,134 Z" class="mFur"/>
+    <circle cx="38" cy="98" r="24" class="mFur"/><circle cx="31" cy="79" r="18" class="mFur"/>
+    <rect x="21" y="71" width="26" height="11" rx="5.5" class="mTank"/>
+    <path d="M158,152 Q192,144 194,106 Q195,84 174,80 Q158,78 157,97 Q155,114 149,134 Z" class="mFur"/>
+    <circle cx="182" cy="98" r="24" class="mFur"/><circle cx="189" cy="79" r="18" class="mFur"/>
+    <rect x="173" y="71" width="26" height="11" rx="5.5" class="mTank"/>
+    <circle cx="110" cy="60" r="52" class="mFur"/>
+    <circle cx="80" cy="77" r="8" fill="#ff9fc4" opacity=".55"/><circle cx="140" cy="77" r="8" fill="#ff9fc4" opacity=".55"/>
+    <circle cx="88" cy="55" r="11" fill="white" stroke="#342d3e" stroke-width="3"/><circle cx="132" cy="55" r="11" fill="white" stroke="#342d3e" stroke-width="3"/>
+    <circle cx="90" cy="57" r="5" fill="#342d3e"/><circle cx="134" cy="57" r="5" fill="#342d3e"/>
+    <circle cx="92" cy="54" r="1.8" fill="white"/><circle cx="136" cy="54" r="1.8" fill="white"/>
+    <path d="M64,85 Q90,65 110,80 Q130,65 156,85 Q142,105 124,91 Q119,107 110,89 Q101,107 96,91 Q78,105 64,85 Z" fill="#6b4a2f"/>
+    <path d="M60,30 Q110,16 160,30 L158,44 Q110,32 62,44 Z" class="mTank"/>
+    <circle cx="155" cy="35" r="5" fill="#ffcf00"/>
   </svg>
   <div class="mascotCaption">Coach Cosmo says: PUMP IT UP! 💪</div>
   <div class="card">
@@ -318,7 +311,6 @@
 <section id="workout" class="screen">
   <div class="counter"><span id="count">0</span> <small>/ <span id="goal">10</span></small></div>
   <div class="tiny" style="margin-top:6px;margin-bottom:6px">⭐ <span id="stars">0</span> stars this set</div>
-  <div class="progress"><div class="bar" id="bar"></div></div>
 
   <div class="camera" id="camera">
     <div class="modelBadge" id="modelBadge">Loading AI…</div>
@@ -334,61 +326,66 @@
   </div>
 
   <div class="coachCorner">
-    <svg class="mascot" id="coachMascot" width="52" height="52" viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="60" cy="55" r="20" fill="#f0c84d"/><circle cx="160" cy="55" r="20" fill="#f0c84d"/>
-      <circle cx="60" cy="55" r="9" fill="#fff2d6"/><circle cx="160" cy="55" r="9" fill="#fff2d6"/>
-      <path d="M62,160 Q28,152 26,114 Q25,92 46,88 Q62,86 63,105 Q65,122 71,142 Z" class="mFur"/>
-      <circle cx="38" cy="106" r="24" class="mFur"/><circle cx="31" cy="87" r="18" class="mFur"/>
-      <rect x="21" y="79" width="26" height="11" rx="5.5" class="mTank"/>
-      <path d="M158,160 Q192,152 194,114 Q195,92 174,88 Q158,86 157,105 Q155,122 149,142 Z" class="mFur"/>
-      <circle cx="182" cy="106" r="24" class="mFur"/><circle cx="189" cy="87" r="18" class="mFur"/>
-      <rect x="173" y="79" width="26" height="11" rx="5.5" class="mTank"/>
-      <ellipse cx="110" cy="178" rx="58" ry="44" class="mFur"/>
-      <path d="M62,152 Q110,133 158,152 L158,200 Q110,214 62,200 Z" class="mTank"/>
-      <polygon points="110,159 114,169 125,169 116,176 119,187 110,180 101,187 104,176 95,169 106,169" fill="#ffcf00"/>
-      <circle cx="110" cy="75" r="52" class="mFur"/>
-      <circle cx="80" cy="92" r="8" fill="#ff9fc4" opacity=".55"/><circle cx="140" cy="92" r="8" fill="#ff9fc4" opacity=".55"/>
-      <ellipse cx="110" cy="87" rx="9" ry="7" fill="#342d3e"/>
-      <rect x="74" y="57" width="30" height="19" rx="9" fill="#1a1030"/><rect x="116" y="57" width="30" height="19" rx="9" fill="#1a1030"/>
-      <rect x="104" y="63" width="12" height="5" rx="2.5" fill="#1a1030"/>
-      <path d="M78,62 Q84,60 90,63" stroke="#ff5fd1" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".85"/>
-      <path d="M120,62 Q126,60 132,63" stroke="#5fe8ff" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".85"/>
-      <path d="M64,100 Q90,80 110,95 Q130,80 156,100 Q142,120 124,106 Q119,122 110,104 Q101,122 96,106 Q78,120 64,100 Z" fill="#6b4a2f"/>
+    <svg class="mascot" id="coachMascot" width="52" height="71" viewBox="0 0 220 300" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="100" cy="284" r="14" class="mFur"/>
+      <ellipse cx="106" cy="260" rx="32" ry="26" class="mFur"/>
+      <ellipse cx="114" cy="218" rx="42" ry="34" class="mFur"/>
+      <ellipse cx="104" cy="170" rx="46" ry="36" class="mFur"/>
+      <ellipse cx="110" cy="118" rx="48" ry="38" class="mFur"/>
+      <path d="M70,240 Q106,252 146,238" stroke="#00000022" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <path d="M62,194 Q108,208 158,192" stroke="#00000022" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <path d="M64,144 Q110,158 156,142" stroke="#00000022" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <path d="M62,152 Q28,144 26,106 Q25,84 46,80 Q62,78 63,97 Q65,114 71,134 Z" class="mFur"/>
+      <circle cx="38" cy="98" r="24" class="mFur"/><circle cx="31" cy="79" r="18" class="mFur"/>
+      <rect x="21" y="71" width="26" height="11" rx="5.5" class="mTank"/>
+      <path d="M158,152 Q192,144 194,106 Q195,84 174,80 Q158,78 157,97 Q155,114 149,134 Z" class="mFur"/>
+      <circle cx="182" cy="98" r="24" class="mFur"/><circle cx="189" cy="79" r="18" class="mFur"/>
+      <rect x="173" y="71" width="26" height="11" rx="5.5" class="mTank"/>
+      <circle cx="110" cy="60" r="52" class="mFur"/>
+      <circle cx="80" cy="77" r="8" fill="#ff9fc4" opacity=".55"/><circle cx="140" cy="77" r="8" fill="#ff9fc4" opacity=".55"/>
+        <circle cx="88" cy="55" r="11" fill="white" stroke="#342d3e" stroke-width="3"/><circle cx="132" cy="55" r="11" fill="white" stroke="#342d3e" stroke-width="3"/>
+      <circle cx="90" cy="57" r="5" fill="#342d3e"/><circle cx="134" cy="57" r="5" fill="#342d3e"/>
+      <circle cx="92" cy="54" r="1.8" fill="white"/><circle cx="136" cy="54" r="1.8" fill="white"/>
+      <path d="M64,85 Q90,65 110,80 Q130,65 156,85 Q142,105 124,91 Q119,107 110,89 Q101,107 96,91 Q78,105 64,85 Z" fill="#6b4a2f"/>
+      <path d="M60,30 Q110,16 160,30 L158,44 Q110,32 62,44 Z" class="mTank"/>
+      <circle cx="155" cy="35" r="5" fill="#ffcf00"/>
     </svg>
-    <span id="coachLine">Coach Cosmo is watching your form!</span>
+    <span id="coachLine">Get into pushup position! I'll start counting once I can see your shoulders, elbows and hips. Ready when you are! ⭐</span>
   </div>
-  <div class="feedback" id="feedback">Get into pushup position. The AI will start counting automatically once it can see your shoulders, elbows and hips.</div>
+  <div class="tiny" style="text-align:center;font-weight:800;letter-spacing:1px;text-transform:uppercase;margin-top:14px;margin-bottom:-4px;color:var(--muted)">Debug</div>
   <div class="manualRow">
     <button class="secondary" onclick="rep()">＋1 manual rep</button>
     <button class="secondary" onclick="undoRep()">－1 undo</button>
   </div>
-  <div class="tiny" id="engineNote">Rep counting uses on-device pose estimation (TensorFlow.js MoveNet) running live on your camera feed. Use the manual buttons any time the AI miscounts.</div>
 </section>
 
 <section id="done" class="screen">
   <canvas id="confettiCanvas"></canvas>
   <div class="victory">
     <div class="jackpotText" id="jackpotText">🎰 JACKPOT 🎰</div>
-    <svg class="mascot cheer" width="190" height="190" viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg" style="margin:0 auto">
-      <circle cx="55" cy="50" r="20" fill="#f0c84d"/><circle cx="165" cy="50" r="20" fill="#f0c84d"/>
-      <circle cx="55" cy="50" r="9" fill="#fff2d6"/><circle cx="165" cy="50" r="9" fill="#fff2d6"/>
+    <svg class="mascot cheer" width="190" height="259" viewBox="0 0 220 300" xmlns="http://www.w3.org/2000/svg" style="margin:0 auto">
+      <circle cx="100" cy="284" r="14" class="mFur"/>
+      <ellipse cx="106" cy="260" rx="32" ry="26" class="mFur"/>
+      <ellipse cx="114" cy="218" rx="42" ry="34" class="mFur"/>
+      <ellipse cx="104" cy="170" rx="46" ry="36" class="mFur"/>
+      <ellipse cx="110" cy="118" rx="48" ry="38" class="mFur"/>
+      <path d="M70,240 Q106,252 146,238" stroke="#00000022" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <path d="M62,194 Q108,208 158,192" stroke="#00000022" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <path d="M64,144 Q110,158 156,142" stroke="#00000022" stroke-width="5" fill="none" stroke-linecap="round"/>
       <path d="M64,148 Q22,120 24,78 Q25,58 46,58 Q62,58 64,78 Q66,105 74,132 Z" class="mFur"/>
       <circle cx="33" cy="70" r="24" class="mFur"/><circle cx="26" cy="51" r="18" class="mFur"/>
       <rect x="16" y="60" width="26" height="11" rx="5.5" class="mTank" transform="rotate(-25 16 60)"/>
       <path d="M156,148 Q198,120 196,78 Q195,58 174,58 Q158,58 156,78 Q154,105 146,132 Z" class="mFur"/>
       <circle cx="187" cy="70" r="24" class="mFur"/><circle cx="194" cy="51" r="18" class="mFur"/>
       <rect x="178" y="60" width="26" height="11" rx="5.5" class="mTank" transform="rotate(25 204 60)"/>
-      <ellipse cx="110" cy="170" rx="58" ry="44" class="mFur"/>
-      <path d="M62,144 Q110,125 158,144 L158,192 Q110,206 62,192 Z" class="mTank"/>
-      <polygon points="110,151 114,161 125,161 116,168 119,179 110,172 101,179 104,168 95,161 106,161" fill="#ffcf00"/>
-      <circle cx="110" cy="67" r="52" class="mFur"/>
-      <circle cx="80" cy="84" r="8" fill="#ff9fc4" opacity=".55"/><circle cx="140" cy="84" r="8" fill="#ff9fc4" opacity=".55"/>
-      <ellipse cx="110" cy="79" rx="9" ry="7" fill="#342d3e"/>
-      <rect x="74" y="49" width="30" height="19" rx="9" fill="#1a1030"/><rect x="116" y="49" width="30" height="19" rx="9" fill="#1a1030"/>
-      <rect x="104" y="55" width="12" height="5" rx="2.5" fill="#1a1030"/>
-      <path d="M78,54 Q84,52 90,55" stroke="#ff5fd1" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".85"/>
-      <path d="M120,54 Q126,52 132,55" stroke="#5fe8ff" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".85"/>
-      <path d="M64,92 Q90,72 110,87 Q130,72 156,92 Q142,112 124,98 Q119,114 110,96 Q101,114 96,98 Q78,112 64,92 Z" fill="#6b4a2f"/>
+      <circle cx="110" cy="60" r="52" class="mFur"/>
+      <circle cx="80" cy="77" r="8" fill="#ff9fc4" opacity=".55"/><circle cx="140" cy="77" r="8" fill="#ff9fc4" opacity=".55"/>
+        <circle cx="88" cy="55" r="11" fill="white" stroke="#342d3e" stroke-width="3"/><circle cx="132" cy="55" r="11" fill="white" stroke="#342d3e" stroke-width="3"/>
+      <circle cx="90" cy="57" r="5" fill="#342d3e"/><circle cx="134" cy="57" r="5" fill="#342d3e"/>
+      <circle cx="92" cy="54" r="1.8" fill="white"/><circle cx="136" cy="54" r="1.8" fill="white"/>
+      <path d="M64,85 Q90,65 110,80 Q130,65 156,85 Q142,105 124,91 Q119,107 110,89 Q101,107 96,91 Q78,105 64,85 Z" fill="#6b4a2f"/>
+      <path d="M60,30 Q110,16 160,30 L158,44 Q110,32 62,44 Z" class="mTank"/>
+      <circle cx="155" cy="35" r="5" fill="#ffcf00"/>
     </svg>
     <div class="mascotCaption" style="margin-top:6px">Coach Cosmo is SO proud of you!</div>
     <h1>YOU DID IT!</h1>
@@ -423,9 +420,8 @@
 
 <section id="buy" class="screen">
   <div class="logo" style="font-size:24px;margin-top:8px">🔓 GO PRO</div>
-  <div class="tag" style="margin-bottom:6px">You've conquered Muscle Beach!</div>
   <div class="card" style="text-align:center">
-    <h2 style="text-align:center">UNLOCK THE FULL GAME</h2>
+    <h2 style="text-align:center">UNLOCK MORE LEVELS</h2>
     <div class="tiny" style="margin-top:0">5 more overworlds. About 6 months of daily levels. One epic journey to legend status.</div>
     <div id="worldPreviewList" style="text-align:left;margin:16px 0"></div>
     <div class="score" style="font-size:40px;margin:10px 0">$4.99</div>
@@ -574,7 +570,7 @@ function renderLeaderboard(){
 }
 
 const SHOP_ITEMS=[
-  {id:'classic',name:'Classic Cosmo',cost:0,fur:'#ffd85c',tank:'#e2211c',desc:'The original look.'},
+  {id:'classic',name:'Classic Cosmo',cost:0,fur:'#ff8fc4',tank:'#ff2f8f',desc:'The original look.'},
   {id:'gold',name:'Golden Gains',cost:500,fur:'#ffe066',tank:'#a6790a',desc:'Solid gold physique.'},
   {id:'ocean',name:'Ocean Blue',cost:800,fur:'#7fd4f0',tank:'#1c3a5e',desc:'Cool as the Pacific.'},
   {id:'camo',name:'Beach Camo',cost:1200,fur:'#a3b06e',tank:'#3d4a24',desc:'Tactical tan, beach ready.'},
@@ -645,7 +641,7 @@ function showStarsInfo(){
     ['30+ day streak','+400 bonus']
   ];
   const rowsHtml=rows.map(r=>`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--steel);font-size:13px">
-    <span>${r[0]}</span><span style="color:var(--yellow);font-weight:800;font-family:Anton,Impact,sans-serif">${r[1]}</span></div>`).join('');
+    <span>${r[0]}</span><span style="color:var(--yellow);font-weight:800;font-family:'Fredoka',sans-serif">${r[1]}</span></div>`).join('');
   showInfo(`
     <h2 style="margin-top:0">⭐ HOW STARS WORK</h2>
     <p style="font-size:14px;line-height:1.5;color:var(--ink)">Every rep earns <b style="color:var(--yellow)">${STARS_PER_REP} stars</b>. Stars are pure currency — spend them in the <b>Swag Shop</b> on cosmetic skins for Coach Cosmo. They don't unlock levels; that's all about daily progress.</p>
@@ -745,11 +741,7 @@ function applyWorldDecor(ow){
   r.setProperty('--mapGround1',ow.decor.ground1); r.setProperty('--mapGround2',ow.decor.ground2);
   r.setProperty('--mapSun1',ow.decor.sun1); r.setProperty('--mapSun2',ow.decor.sun2);
   r.setProperty('--mapWave1',ow.decor.wave1); r.setProperty('--mapWave2',ow.decor.wave2);
-  document.getElementById('mapSign').innerHTML=ow.decor.sign;
-  document.getElementById('mapBird1').textContent=ow.decor.bird;
-  document.getElementById('mapBird2').textContent=ow.decor.bird;
-  document.getElementById('mapPalm1').textContent=ow.decor.palm;
-  document.getElementById('mapPalm2').textContent=ow.decor.palm;
+  document.getElementById('mapSignText').innerHTML=ow.decor.sign;
 }
 
 function renderWorldTabs(){
@@ -774,6 +766,31 @@ function renderWorldTabs(){
     wrap.appendChild(btn);
   });
 }
+
+const MASCOT_SMALL_SVG=`<svg width="50" height="68" viewBox="0 0 220 300" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="100" cy="284" r="14" class="mFur"/>
+  <ellipse cx="106" cy="260" rx="32" ry="26" class="mFur"/>
+  <ellipse cx="114" cy="218" rx="42" ry="34" class="mFur"/>
+  <ellipse cx="104" cy="170" rx="46" ry="36" class="mFur"/>
+  <ellipse cx="110" cy="118" rx="48" ry="38" class="mFur"/>
+  <path d="M70,240 Q106,252 146,238" stroke="#00000022" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <path d="M62,194 Q108,208 158,192" stroke="#00000022" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <path d="M64,144 Q110,158 156,142" stroke="#00000022" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <path d="M62,152 Q28,144 26,106 Q25,84 46,80 Q62,78 63,97 Q65,114 71,134 Z" class="mFur"/>
+  <circle cx="38" cy="98" r="24" class="mFur"/><circle cx="31" cy="79" r="18" class="mFur"/>
+  <rect x="21" y="71" width="26" height="11" rx="5.5" class="mTank"/>
+  <path d="M158,152 Q192,144 194,106 Q195,84 174,80 Q158,78 157,97 Q155,114 149,134 Z" class="mFur"/>
+  <circle cx="182" cy="98" r="24" class="mFur"/><circle cx="189" cy="79" r="18" class="mFur"/>
+  <rect x="173" y="71" width="26" height="11" rx="5.5" class="mTank"/>
+  <circle cx="110" cy="60" r="52" class="mFur"/>
+  <circle cx="80" cy="77" r="8" fill="#ff9fc4" opacity=".55"/><circle cx="140" cy="77" r="8" fill="#ff9fc4" opacity=".55"/>
+  <circle cx="88" cy="55" r="11" fill="white" stroke="#342d3e" stroke-width="3"/><circle cx="132" cy="55" r="11" fill="white" stroke="#342d3e" stroke-width="3"/>
+  <circle cx="90" cy="57" r="5" fill="#342d3e"/><circle cx="134" cy="57" r="5" fill="#342d3e"/>
+  <circle cx="92" cy="54" r="1.8" fill="white"/><circle cx="136" cy="54" r="1.8" fill="white"/>
+  <path d="M64,85 Q90,65 110,80 Q130,65 156,85 Q142,105 124,91 Q119,107 110,89 Q101,107 96,91 Q78,105 64,85 Z" fill="#6b4a2f"/>
+  <path d="M60,30 Q110,16 160,30 L158,44 Q110,32 62,44 Z" class="mTank"/>
+  <circle cx="155" cy="35" r="5" fill="#ffcf00"/>
+</svg>`;
 
 const ISO_TILE_W=210, ISO_TILE_H=130, ISO_PAD=110;
 const ISO_AMP1=1.7, ISO_FREQ1=0.75, ISO_AMP2=0.6, ISO_FREQ2=1.9;
@@ -892,6 +909,22 @@ function renderWorldMap(worldIdx){
   inner.style.width=layout.width+'px';
   inner.style.height=layout.height+'px';
 
+  const treeCount=Math.max(6, Math.round(ow.days/4*1.69));
+  for(let t=0;t<treeCount;t++){
+    const frac=(t+0.5)/treeCount;
+    const idx=Math.min(layout.positions.length-1, Math.floor(frac*layout.positions.length));
+    const base=layout.positions[idx];
+    const side=(t%2===0)?1:-1;
+    const jitterX=side*(60+30*Math.sin(t*2.3));
+    const jitterY=20*Math.cos(t*1.7);
+    const tree=document.createElement('div');
+    tree.className='map-palm';
+    tree.style.left=(base.x+jitterX)+'px';
+    tree.style.top=(base.y+jitterY)+'px';
+    tree.textContent=ow.decor.palm;
+    inner.appendChild(tree);
+  }
+
   const unlocked=getUnlockedCount();
   const maxAllowed=getMaxAllowed();
   const frontier=unlocked-1;
@@ -931,6 +964,7 @@ function renderWorldMap(worldIdx){
     slot.style.left=pos.x+'px'; slot.style.top=pos.y+'px';
     const shadow=document.createElement('div');
     shadow.className='levelShadow';
+    let isCurrent=false;
     const btn=document.createElement('button');
     let icon, label;
     if(globalIdx>=maxAllowed){
@@ -939,18 +973,19 @@ function renderWorldMap(worldIdx){
       btn.onclick=()=>selectLevel(globalIdx+1);
     } else if(globalIdx>=unlocked){
       btn.className='level locked';
-      icon='🔒'; label=ow.levels[j].reps+' reps';
+      icon='🔒'; label=ow.levels[j].reps+' REPS';
       btn.onclick=()=>selectLevel(globalIdx+1);
     } else if(globalIdx===frontier && playedToday){
       btn.className='level unlocked cooldown';
       icon='🌙'; label='Tomorrow';
       btn.onclick=()=>selectLevel(globalIdx+1);
     } else {
-      btn.className='level unlocked'+(globalIdx===frontier?' current':'');
-      icon='⭐'; label=ow.levels[j].reps+' reps';
+      isCurrent=(globalIdx===frontier);
+      btn.className='level unlocked'+(isCurrent?' current':'');
+      icon=''; label=ow.levels[j].reps+' REPS';
       btn.onclick=()=>selectLevel(globalIdx+1);
     }
-    btn.innerHTML=`${icon}<small>${j+1}</small><b>${label}</b>`;
+    btn.innerHTML=`<span class="lvlIcon">${icon}</span><small>DAY ${j+1}</small><b>${label}</b>`;
     const doneTimes=(history[String(globalIdx+1)]||[]).length;
     if(doneTimes>0){
       const badge=document.createElement('span');
@@ -958,12 +993,26 @@ function renderWorldMap(worldIdx){
       badge.textContent=doneTimes>1?('✅'+doneTimes):'✅';
       btn.appendChild(badge);
     }
-    slot.appendChild(shadow);
+    if(!isCurrent) slot.appendChild(shadow);
     slot.appendChild(btn);
     inner.appendChild(slot);
   }
 
   initPan();
+  if(frontier>=ow.startIndex && frontier<ow.startIndex+ow.days){
+    const fj=frontier-ow.startIndex;
+    const fpos=layout.positions[fj];
+    const buddySlot=document.createElement('div');
+    buddySlot.style.position='absolute';
+    buddySlot.style.left=(fpos.x+72)+'px';
+    buddySlot.style.top=fpos.y+'px';
+    buddySlot.style.width='0'; buddySlot.style.height='0';
+    const buddy=document.createElement('div');
+    buddy.className='mapBuddy';
+    buddy.innerHTML=MASCOT_SMALL_SVG;
+    buddySlot.appendChild(buddy);
+    inner.appendChild(buddySlot);
+  }
   requestAnimationFrame(()=>{
     let targetJ;
     if(frontier>=ow.startIndex && frontier<ow.startIndex+ow.days) targetJ=frontier-ow.startIndex;
@@ -1028,8 +1077,7 @@ function startWorkout(){
   document.getElementById('goal').textContent=goal;
   document.getElementById('count').textContent=0;
   document.getElementById('stars').textContent=0;
-  document.getElementById('bar').style.width='0%';
-  setFeedback('Get into pushup position. The AI will start counting automatically once it can see your shoulders, elbows and hips.','');
+  setFeedback("Get into pushup position! I'll start counting once I can see your shoulders, elbows and hips. Ready when you are! ⭐",'');
   show('workout');
 }
 
@@ -1106,9 +1154,9 @@ function pickSide(pose){
 }
 
 function setFeedback(text,cls){
-  const f=document.getElementById('feedback');
+  const f=document.getElementById('coachLine');
   f.textContent=text;
-  f.className='feedback'+(cls?(' '+cls):'');
+  f.className=cls?cls:'';
 }
 
 function detectLoop(){
@@ -1229,7 +1277,6 @@ function completeRep(){
   count++;
   document.getElementById('count').textContent=count;
   document.getElementById('stars').textContent=count*STARS_PER_REP;
-  document.getElementById('bar').style.width=(count/goal*100)+'%';
   cheerCoach();
   if(count>=goal) finishWorkout();
 }
@@ -1239,7 +1286,6 @@ function rep(){
   count++;
   document.getElementById('count').textContent=count;
   document.getElementById('stars').textContent=count*STARS_PER_REP;
-  document.getElementById('bar').style.width=(count/goal*100)+'%';
   setFeedback('Manual rep added.','good');
   cheerCoach();
   if(count>=goal) finishWorkout();
@@ -1249,7 +1295,6 @@ function undoRep(){
   count--;
   document.getElementById('count').textContent=count;
   document.getElementById('stars').textContent=count*STARS_PER_REP;
-  document.getElementById('bar').style.width=(count/goal*100)+'%';
 }
 
 function finishWorkout(){
