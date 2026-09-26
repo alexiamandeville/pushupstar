@@ -444,7 +444,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/pose-detection@2.1.3/dist/pose-detection.min.js"></script>
 <script>
 let goal=10, count=0, stream=null, selectedLevel=1, isLevelSession=false;
-let detector=null, rafId=null, currentFacing='environment';
+let detector=null, rafId=null, currentFacing='user';
 let repState='up', minElbowDuringDown=999, lastRepAt=0;
 const CONF_MIN=0.35;          // minimum keypoint confidence to trust it
 const DOWN_ENTER=100;         // elbow angle below this = "down" phase
